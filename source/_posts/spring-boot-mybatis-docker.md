@@ -5,9 +5,9 @@ tags: spring boot
 ---
 
 ### 0x00 前置条件
-1. Java
-2. maven
-2. Docker
+1. [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+2. [Maven](https://maven.apache.org/download.cgi)
+2. [Docker](https://docs.docker.com/engine/installation/), [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### 0x01 使用maven新建Spring Boot工程 
 
@@ -331,4 +331,50 @@ docker run -d -t \
 
 ```bash
 curl http://localhost:8088/user?name=dave
+```
+
+### 0x05 使用docker-compose启动
+
+在项目根路径下增加docker-compose的配置文件
+
+`docker-compose.yml`
+
+```yaml
+version: '3.3'
+
+services:
+  mybatis-mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=mybatis
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=123456
+  demo-springboot-docker:
+    image: tomoyadeng/demo-springboot-docker
+    depends_on:
+      - mybatis-mysql
+    ports:
+      - 8088:8080
+    environment:
+      - DATABASE_HOST=mybatis-mysql
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=123456
+      - DATABASE_NAME=mybatis
+      - DATABASE_PORT=3306
+```
+
+启动前，先将之前手动启动的容器停掉
+
+```bash
+docker stop demo-springboot-docker
+docker stop mybatis-mysql
+docker rm demo-springboot-docker
+docker rm mybatis-mysql
+```
+
+然后直接使用命令启动
+
+```bash
+docker-compose up
 ```
