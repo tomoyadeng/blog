@@ -1,7 +1,7 @@
 ---
 title: spring-boot-mybatis-docker整合使用
 date: 2017-07-23 17:13:17
-tags:
+tags: spring boot
 ---
 
 ### 0x00 前置条件
