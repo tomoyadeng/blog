@@ -9,6 +9,8 @@ tags: spring boot
 2. [Maven](https://maven.apache.org/download.cgi)
 2. [Docker](https://docs.docker.com/engine/installation/), [Docker Compose](https://docs.docker.com/compose/install/)
 
+<!-- more -->
+
 ### 0x01 使用maven新建Spring Boot工程 
 
 按工程根目录的相对路径创建如下文件
@@ -80,7 +82,6 @@ public class Application {
 这样，一个简单的Spring boot的应用就创建OK。可使用`mvn package`编译打包为jar， 然后使用命令行`java -jar target/demo-springboot-docker-1.0.0.jar`直接启动
 
 ### 0x02 将应用docker化
-<!-- more -->
 
 首先创建应用的Dockerfile
 
