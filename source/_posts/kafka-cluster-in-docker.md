@@ -28,19 +28,19 @@ date: 2018-06-02 17:46:22
     ```yaml
     version: '2.1'
     services:
-    zookeeper:
+      zookeeper:
         image: wurstmeister/zookeeper
         ports:
-        - "2181"
-    kafka:
+          - "2181"
+      kafka:
         image: wurstmeister/kafka
         ports:
-        - "9092"
+          - "9092"
         environment:
-        KAFKA_ADVERTISED_HOST_NAME: 192.168.5.139
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_ADVERTISED_HOST_NAME: 192.168.5.139
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
         volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+          - /var/run/docker.sock:/var/run/docker.sock
     ```
 
     __注意：__ `KAFKA_ADVERTISED_HOST_NAME` 需要配置为宿主机的ip
