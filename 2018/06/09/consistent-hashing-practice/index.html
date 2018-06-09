@@ -71,7 +71,7 @@
 <link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -87,13 +87,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Tomoya&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。 采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：  对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。 而且，需要保证在某个采集器失效离线时，之前">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一致性哈希算法的一次实践">
+<meta property="og:url" content="http://yoursite.com/2018/06/09/consistent-hashing-practice/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
+<meta property="og:description" content="最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。 采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：  对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。 而且，需要保证在某个采集器失效离线时，之前">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-09T16:36:55.978Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tomoya&#39;s Blog">
+<meta name="twitter:title" content="一致性哈希算法的一次实践">
+<meta name="twitter:description" content="最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。 采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：  对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。 而且，需要保证在某个采集器失效离线时，之前">
 
 
 
@@ -121,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/09/consistent-hashing-practice/"/>
 
 
 
 
 
-  <title> Tomoya's Blog </title>
+  <title> 一致性哈希算法的一次实践 | Tomoya's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -161,9 +166,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -280,9 +283,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -312,10 +315,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/blog/2018/06/09/consistent-hashing-practice/" itemprop="url">
-                  一致性哈希算法的一次实践
-                </a>
+                一致性哈希算法的一次实践
               
             
           </h1>
@@ -377,9 +377,7 @@
       
 
       
-        
-          
-            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。</p>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。</p>
 <p>采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：</p>
 <ul>
 <li>对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。</li>
@@ -399,695 +397,72 @@
 <p>然后直接在CollectorCluster类中增加一个main函数来测试</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    CollectorCluster cluster = <span class="keyword">new</span> CollectorCluster();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册5个采集器</span></span><br><span class="line">    List.of(<span class="string">"192.168.0.1"</span>, <span class="string">"192.168.0.2"</span>, <span class="string">"192.168.0.3"</span>, <span class="string">"192.168.0.4"</span>, <span class="string">"192.168.0.5"</span>)</span><br><span class="line">            .stream()</span><br><span class="line">            .map(DefaultCollector::<span class="keyword">new</span>)</span><br><span class="line">            .forEach(cluster::register);</span><br><span class="line"></span><br><span class="line">    String ipPrefix = <span class="string">"136.10.1."</span>;</span><br><span class="line">    <span class="comment">// 20个设备 进行负载均衡</span></span><br><span class="line">    Stream.iterate(<span class="number">1</span>, i -&gt; i + <span class="number">1</span>).limit(<span class="number">20</span>).map(i -&gt; ipPrefix + i).forEach(cluster::choose);</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">"============"</span>);</span><br><span class="line">    <span class="comment">// 离线一个采集器</span></span><br><span class="line">    cluster.offline(<span class="keyword">new</span> DefaultCollector(<span class="string">"192.168.0.5"</span>));</span><br><span class="line">    <span class="comment">// 20个设备 再次进行负载均衡</span></span><br><span class="line">    Stream.iterate(<span class="number">1</span>, i -&gt; i + <span class="number">1</span>).limit(<span class="number">20</span>).map(i -&gt; ipPrefix + i).forEach(cluster::choose);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/06/02/kafka-cluster-in-docker/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/06/02/kafka-cluster-in-docker/" itemprop="url">
-                  使用Docker快速搭建Kafka开发环境
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-02T17:46:22+08:00">
-                2018-06-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/blog/tags/Java/" rel="tag"># Java</a>
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/06/02/kafka-cluster-in-docker/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/06/02/kafka-cluster-in-docker/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
         
-          
-            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>最近准备学习Kafka，于是买了《Kafka权威指南》来看。作为一个初学者，快速搭建起一套可以运行的环境十分重要，跟着该书第2章的安装介绍可以完成在Linux系统下的环境搭建，但是读下来发现步骤还是有点繁多。有没有什么更加快捷的办法搭建一套可以运行的开发环境呢，于是我想到了Docker。2018年了，容器化已经成为了主流，在本地进行开发和测试的时候使用Docker也便于模拟多节点的集群环境。</p>
-<h3 id="0x00-前置条件"><a href="#0x00-前置条件" class="headerlink" title="0x00 前置条件"></a>0x00 前置条件</h3><ul>
-<li><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" target="_blank" rel="noopener">Docker</a>:  要想使用Docker来启动kafka，开发环境提前装好Docker是必须的，我一般在Ubuntu虚拟机上进行开发测试</li>
-<li><a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">Docker Compose</a>: kafka依赖zookeeper，使用docker-compose来管理容器依赖</li>
-</ul>
-<h3 id="0x01-Docker镜像"><a href="#0x01-Docker镜像" class="headerlink" title="0x01 Docker镜像"></a>0x01 Docker镜像</h3><p>要想使用Docker安装Kafka，第一件事当然是去Docker hub上找镜像以及使用方法啦。发现kafka并不像mysql或者redis那样有官方镜像，不过Google一下后发现可以选择知名的三方镜像<a href="https://hub.docker.com/r/wurstmeister/kafka/" target="_blank" rel="noopener">wurstmeister/kafka</a></p>
-<p><a href="https://github.com/wurstmeister/kafka-docker" target="_blank" rel="noopener">wurstmeister/kafka</a>在Github上更新还算频繁，目前使用kafka版本是<code>1.1.0</code></p>
-<h3 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h3><ol>
-<li><p>参考<a href="https://github.com/wurstmeister/kafka-docker/blob/master/test/docker-compose.yml" target="_blank" rel="noopener">官方测试用的docker-compose.yml</a>直接在自定义的目录位置新建docker-compose的配置文件</p>
-<p> <code>touch ~/docker/kafka/docker-compose.yml</code></p>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'2.1'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  zookeeper:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">wurstmeister/zookeeper</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"2181"</span></span><br><span class="line"><span class="attr">  kafka:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">wurstmeister/kafka</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"9092"</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="attr">      KAFKA_ADVERTISED_HOST_NAME:</span> <span class="number">192.168</span><span class="number">.5</span><span class="number">.139</span></span><br><span class="line"><span class="attr">      KAFKA_ZOOKEEPER_CONNECT:</span> <span class="attr">zookeeper:2181</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br></pre></td></tr></table></figure>
-<p> <strong>注意：</strong> <code>KAFKA_ADVERTISED_HOST_NAME</code> 需要配置为宿主机的ip</p>
-</li>
-<li><p><code>docker-compose</code> 启动kafka</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~/docker/kafka# docker-compose up -d</span><br></pre></td></tr></table></figure>
-<p> 启动完之后通过<code>docker ps</code>可以看到启动了一个zookeeper容器和一个kafka容器</p>
-</li>
-<li><p>启动多个kafka节点，比如3</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~/docker/kafka# docker-compose scale kafka=3</span><br></pre></td></tr></table></figure>
-<p> 如果没什么错误的话，再通过<code>docker ps</code>可以看到启动了一个zookeeper容器和三个kafka容器</p>
-</li>
-</ol>
-<h3 id="0x03-验证"><a href="#0x03-验证" class="headerlink" title="0x03 验证"></a>0x03 验证</h3><ol>
-<li><p>首先进入到一个kafka容器中，例如: kafka_kafka_1</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~/docker/kafka# docker exec -it kafka_kafka_1 /bin/bash</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建一个topic并查看，需要指定zookeeper的容器名(这里是kafka_zookeeper_1)，topic的名字为test</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-topics.sh --create --topic test --zookeeper kafka_zookeeper_1:2181 --replication-factor 1 --partitions 1</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-topics.sh --list --zookeeper kafka_zookeeper_1:2181</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发布消息，输入几条消息后，按^C退出发布</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-console-producer.sh --topic=test --broker-list kafka_kafka_1:9092</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>接受消息</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server kafka_kafka_1:9092 --from-beginning --topic test</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>如果接收到了发布的消息，那么说明部署正常，可以正式使用了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/05/13/topK-with-PriorityQueue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/blog/2018/06/02/kafka-cluster-in-docker/" rel="next" title="使用Docker快速搭建Kafka开发环境">
+                <i class="fa fa-chevron-left"></i> 使用Docker快速搭建Kafka开发环境
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/blog/2018/05/13/topK-with-PriorityQueue/" itemprop="url">
-                  使用 PriorityQueue 求解 Top K 问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-13T14:27:59+08:00">
-                2018-05-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/05/13/topK-with-PriorityQueue/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/13/topK-with-PriorityQueue/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><h3 id="0x00-问题描述"><a href="#0x00-问题描述" class="headerlink" title="0x00 问题描述"></a>0x00 问题描述</h3><p>这两天在看一些面试题的时候，遇到一个问题:</p>
-<blockquote>
-<p>有N(N&gt;&gt;10000)个整数,求出其中的前K个最大的数</p>
-</blockquote>
-<p>在网上搜了下，大概有三种解决思路：</p>
-<ul>
-<li>排序：这种方式最好理解，但是时间复杂度较高(使用快排,O(NlogN))</li>
-<li>堆： 维护一个有边界的小顶堆(O(NlogK))</li>
-<li>位图： 理解较为困难 (O(N))</li>
-</ul>
-<p>自己动手试了试第二种思路在Java中的实现(泛型版本)</p>
-<h3 id="0x01-Java实现"><a href="#0x01-Java实现" class="headerlink" title="0x01 Java实现"></a>0x01 Java实现</h3><p>在 Java 中，PriorityQueue 类实现了堆这种数据结构，可以用来求解Top K 问题。</p>
-<p>整个算法的思想就是： 通过PriorityQueue实现一个有界的堆，逐个向堆中添加元素，当元素个数超过边界时，淘汰堆顶元素</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tomoyadeng.javabeginner.interview;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">import</span> java.util.stream.Stream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TopK</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 堆的边界，Top K 问题中的 K</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> boundary;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 优先队列，用来构造一个有界的堆</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PriorityQueue&lt;T&gt; boundaryHeap;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通过自定义边界 boundary 可以求解 top K 问题</span></span><br><span class="line"><span class="comment">     * 通过自定义比较器 comparator 可以控制求解 top K 大 还是 top K 小</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> boundary 边界 K</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> comparator 数据比较器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TopK</span><span class="params">(<span class="keyword">int</span> boundary, Comparator&lt;T&gt; comparator)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.boundary = boundary;</span><br><span class="line">        boundaryHeap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(boundary, comparator);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 求解数据流中的top K， 将结果写入List中</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> dataStream 数据流</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> results top K 结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topK</span><span class="params">(Stream&lt;T&gt; dataStream, List&lt;T&gt; results)</span> </span>&#123;</span><br><span class="line">        dataStream.forEach(<span class="keyword">this</span>::add);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!boundaryHeap.isEmpty()) &#123;</span><br><span class="line">            results.add(boundaryHeap.poll());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 向有界堆中添加元素的帮助方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> t 待添加数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        boundaryHeap.add(t);</span><br><span class="line">        <span class="keyword">if</span> (boundaryHeap.size() &gt; boundary) &#123;</span><br><span class="line">            boundaryHeap.poll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="0x02-测试"><a href="#0x02-测试" class="headerlink" title="0x02 测试"></a>0x02 测试</h3><p>直接写一个main函数进行测试</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 构造一个 范围为 [0, 2^30] 的 Integer 流，通过limit可以控制大小</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> upLimit = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    Stream&lt;Integer&gt; stream = Stream.generate(Math::random)</span><br><span class="line">            .map(d -&gt; d * upLimit)</span><br><span class="line">            .map(d -&gt; (<span class="keyword">int</span>) Math.round(d))</span><br><span class="line">            .limit(<span class="number">100_000_000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 (o1, o2) -&gt; (o1 - o2) 换成 (o1, o2) -&gt; (o2 - o1) 可以求解 top K 小</span></span><br><span class="line">    TopK&lt;Integer&gt; topK = <span class="keyword">new</span> TopK&lt;&gt;(<span class="number">10</span>, (o1, o2) -&gt; (o1 - o2));</span><br><span class="line"></span><br><span class="line">    List&lt;Integer&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">    topK.topK(stream, results);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> endTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">"results: "</span> + results);</span><br><span class="line">    System.out.println(<span class="string">"cost: "</span> + (endTime - startTime) / <span class="number">1000.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>1亿数据测试结果：</p>
-<blockquote>
-<p>results: [1073741717, 1073741721, 1073741740, 1073741747, 1073741768, 1073741781, 1073741785, 1073741791, 1073741792, 1073741813]<br>cost: 7.656</p>
-</blockquote>
-<h3 id="0x03-优点分析"><a href="#0x03-优点分析" class="headerlink" title="0x03 优点分析"></a>0x03 优点分析</h3><p>在输入数据流是一个惰性流(不需要一次性将全部数据加载到内存)的情况下，这种方式速度较快且占用最少的内存，内存中只需要维护一个固定大小的堆即可</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/05/06/kubernetes-installation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/05/06/kubernetes-installation/" itemprop="url">
-                  kubernetes-installation
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-06T14:32:31+08:00">
-                2018-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/05/06/kubernetes-installation/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/06/kubernetes-installation/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>基于Kubernetes1.10.2</strong></p>
-<h3 id="0x00-前置条件"><a href="#0x00-前置条件" class="headerlink" title="0x00 前置条件"></a>0x00 前置条件</h3><ul>
-<li>ubuntu16.04 虚拟机</li>
-<li>shadowsocks 科学上网</li>
-</ul>
-<p>本机是Win10，通过Vmvare安装好几台ubuntu16.04虚拟机，均使用root账号登陆操作，本机已经可以通过shadowsocks(简称ss)进行科学上网</p>
-<h4 id="虚拟机列表"><a href="#虚拟机列表" class="headerlink" title="虚拟机列表"></a>虚拟机列表</h4><table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>ip</th>
-<th>角色</th>
-<th>配置</th>
-<th>OS</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>K8s-1</td>
-<td>192.168.5.136</td>
-<td>master</td>
-<td>2U2G</td>
-<td>Ubuntu16.04</td>
-</tr>
-<tr>
-<td>K8s-2</td>
-<td>192.168.5.137</td>
-<td>node</td>
-<td>1U2G</td>
-<td>Ubuntu16.04</td>
-</tr>
-<tr>
-<td>K8s-3</td>
-<td>192.168.5.138</td>
-<td>node</td>
-<td>1U2G</td>
-<td>Ubuntu16.04</td>
-</tr>
-</tbody>
-</table>
-<h3 id="0x01-准备环境-所有虚拟机"><a href="#0x01-准备环境-所有虚拟机" class="headerlink" title="0x01 准备环境(所有虚拟机)"></a>0x01 准备环境(所有虚拟机)</h3><h4 id="ubuntu虚拟机配置apt源"><a href="#ubuntu虚拟机配置apt源" class="headerlink" title="ubuntu虚拟机配置apt源"></a>ubuntu虚拟机配置apt源</h4><p>国内配置apt源为阿里云的源下载速度会快一些，(shadowsocks设置为PAC模式)</p>
-<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cp -p /etc/apt/sources.list /etc/apt/sources.list.bak</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat &lt;&lt;-EOF | sudo tee /etc/apt/sources.list</span></span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> apt-get update</span></span><br></pre></td></tr></table></figure>
-<h4 id="ubuntu虚拟机配置代理进行科学上网"><a href="#ubuntu虚拟机配置代理进行科学上网" class="headerlink" title="ubuntu虚拟机配置代理进行科学上网"></a>ubuntu虚拟机配置代理进行科学上网</h4><ul>
-<li><p>首先要在本机的shadowsocks上使能局域网访问(右键shadowsocks进行选择)</p>
-</li>
-<li><p>在ubuntu虚拟机上配置全局代理，<code>proxyserveraddr</code>为本机的IP地址，Windows上可使用<code>ipconfig</code>查看，<code>proxyserverport</code>为shadowsocks端口，默认为1080</p>
-<p>  将下面的内容添加到<code>~/.profile</code>末尾</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> proxyserveraddr=192.168.99.248</span><br><span class="line"><span class="built_in">export</span> proxyserverport=1080</span><br><span class="line"><span class="built_in">export</span> HTTP_PROXY=<span class="string">"http://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> HTTPS_PROXY=<span class="string">"https://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> FTP_PROXY=<span class="string">"ftp://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> SOCKS_PROXY=<span class="string">"socks://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> NO_PROXY=<span class="string">"localhost,127.0.0.1,localaddress,.localdomain.com,10.0.0.0/8,192.168.0.0/16"</span></span><br><span class="line"><span class="built_in">export</span> http_proxy=<span class="string">"http://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> https_proxy=<span class="string">"https://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> ftp_proxy=<span class="string">"ftp://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> socks_proxy=<span class="string">"socks://<span class="variable">$proxyserveraddr</span>:<span class="variable">$proxyserverport</span>/"</span></span><br><span class="line"><span class="built_in">export</span> no_proxy=<span class="string">"localhost,127.0.0.1,localaddress,.localdomain.com,10.0.0.0/8,192.168.0.0/16"</span></span><br></pre></td></tr></table></figure>
-<p>  执行下面的命令生效proxy配置</p>
-  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> ~/.profile</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat &lt;&lt;-EOF| sudo tee /etc/apt/apt.conf</span></span><br><span class="line">Acquire::http::proxy "http://$proxyserveraddr:$proxyserverport/";</span><br><span class="line">Acquire::https::proxy "https://$proxyserveraddr:$proxyserverport/";</span><br><span class="line">Acquire::ftp::proxy "ftp://$proxyserveraddr:$proxyserverport/";</span><br><span class="line">Acquire::socks::proxy "socks://$proxyserveraddr:$proxyserverport/";</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>测试proxy是否可用</p>
-  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> curl www.google.com</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="关闭swap"><a href="#关闭swap" class="headerlink" title="关闭swap"></a>关闭swap</h4><p>编辑<code>/etc/fstab</code>文件，注释掉引用swap的行，保存并重启后输入<code>sudo swapoff -a</code>即可。参考<a href="https://github.com/kubernetes/kubernetes/issues/53533" target="_blank" rel="noopener">Kubelet/Kubernetes should work with Swap Enabled</a></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/05/06/kubernetes-installation/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
+          <span class="post-nav-divider"></span>
 
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2017/07/23/spring-boot-mybatis-docker/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+          <div class="post-nav-prev post-nav-item">
             
-            
-              
-                
-                <a class="post-title-link" href="/blog/2017/07/23/spring-boot-mybatis-docker/" itemprop="url">
-                  spring-boot-mybatis-docker整合使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-23T17:13:17+08:00">
-                2017-07-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2017/07/23/spring-boot-mybatis-docker/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/07/23/spring-boot-mybatis-docker/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="0x00-前置条件"><a href="#0x00-前置条件" class="headerlink" title="0x00 前置条件"></a>0x00 前置条件</h3><ol>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">Java</a></li>
-<li><a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener">Maven</a></li>
-<li><a href="https://docs.docker.com/engine/installation/" target="_blank" rel="noopener">Docker</a>, <a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">Docker Compose</a></li>
-</ol>
-<h3 id="0x01-使用maven新建Spring-Boot工程"><a href="#0x01-使用maven新建Spring-Boot工程" class="headerlink" title="0x01 使用maven新建Spring Boot工程"></a>0x01 使用maven新建Spring Boot工程</h3><p>按工程根目录的相对路径创建如下文件</p>
-<p><code>pom.xml</code><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.tomoyadeng<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>demo-springboot-docker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2017/07/23/spring-boot-mybatis-docker/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -1095,6 +470,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -1114,8 +500,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/blog/images/avatar.gif"
@@ -1168,6 +563,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-接口定义"><span class="nav-number">1.</span> <span class="nav-text"><a href="#0x01-&#x63A5;&#x53E3;&#x5B9A;&#x4E49;" class="headerlink" title="0x01 &#x63A5;&#x53E3;&#x5B9A;&#x4E49;"></a>0x01 &#x63A5;&#x53E3;&#x5B9A;&#x4E49;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#网络设备"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#&#x7F51;&#x7EDC;&#x8BBE;&#x5907;" class="headerlink" title="&#x7F51;&#x7EDC;&#x8BBE;&#x5907;"></a>&#x7F51;&#x7EDC;&#x8BBE;&#x5907;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#采集器"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#&#x91C7;&#x96C6;&#x5668;" class="headerlink" title="&#x91C7;&#x96C6;&#x5668;"></a>&#x91C7;&#x96C6;&#x5668;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集群"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#&#x96C6;&#x7FA4;" class="headerlink" title="&#x96C6;&#x7FA4;"></a>&#x96C6;&#x7FA4;</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02-算法实现"><span class="nav-number">2.</span> <span class="nav-text"><a href="#0x02-&#x7B97;&#x6CD5;&#x5B9E;&#x73B0;" class="headerlink" title="0x02 &#x7B97;&#x6CD5;&#x5B9E;&#x73B0;"></a>0x02 &#x7B97;&#x6CD5;&#x5B9E;&#x73B0;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash算法选择"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#Hash&#x7B97;&#x6CD5;&#x9009;&#x62E9;" class="headerlink" title="Hash&#x7B97;&#x6CD5;&#x9009;&#x62E9;"></a>Hash&#x7B97;&#x6CD5;&#x9009;&#x62E9;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#具体实现"><span class="nav-number">2.2.</span> <span class="nav-text"><a href="#&#x5177;&#x4F53;&#x5B9E;&#x73B0;" class="headerlink" title="&#x5177;&#x4F53;&#x5B9E;&#x73B0;"></a>&#x5177;&#x4F53;&#x5B9E;&#x73B0;</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x03-测试"><span class="nav-number">3.</span> <span class="nav-text"><a href="#0x03-&#x6D4B;&#x8BD5;" class="headerlink" title="0x03 &#x6D4B;&#x8BD5;"></a>0x03 &#x6D4B;&#x8BD5;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1275,6 +686,10 @@
   
 
   
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
@@ -1292,6 +707,18 @@
       <script id="dsq-count-scr" src="https://tomoya-blog.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/06/09/consistent-hashing-practice/';
+          this.page.identifier = '2018/06/09/consistent-hashing-practice/';
+          this.page.title = '一致性哈希算法的一次实践';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://tomoya-blog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   
