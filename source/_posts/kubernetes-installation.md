@@ -1,5 +1,5 @@
 ---
-title: kubernetes-installation
+title: kubernetes 安装笔记
 tags: kubernetes
 date: 2018-05-06 14:32:31
 ---
@@ -20,6 +20,8 @@ __基于Kubernetes1.10.2__
 |K8s-1|192.168.5.136|master|2U2G|Ubuntu16.04|
 |K8s-2|192.168.5.137|node|1U2G|Ubuntu16.04|
 |K8s-3|192.168.5.138|node|1U2G|Ubuntu16.04|
+
+<!-- more -->
 
 ### 0x01 准备环境(所有虚拟机)
 
@@ -88,8 +90,6 @@ $ apt-get update
 #### 关闭swap
 
 编辑`/etc/fstab`文件，注释掉引用swap的行，保存并重启后输入`sudo swapoff -a`即可。参考[Kubelet/Kubernetes should work with Swap Enabled](https://github.com/kubernetes/kubernetes/issues/53533)
-
-<!-- more -->
 
 ### 0x02 安装Docker(所有虚拟机)
 

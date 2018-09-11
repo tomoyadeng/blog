@@ -19,6 +19,8 @@ date: 2018-06-02 17:46:22
 
 [wurstmeister/kafka](https://github.com/wurstmeister/kafka-docker)在Github上更新还算频繁，目前使用kafka版本是`1.1.0`
 
+<!-- more -->
+
 ### 0x02 安装
 
 1. 参考[官方测试用的docker-compose.yml](https://github.com/wurstmeister/kafka-docker/blob/master/test/docker-compose.yml)直接在自定义的目录位置新建docker-compose的配置文件

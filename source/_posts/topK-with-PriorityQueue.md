@@ -24,6 +24,8 @@ tags: Java
 
 整个算法的思想就是： 通过PriorityQueue实现一个有界的堆，逐个向堆中添加元素，当元素个数超过边界时，淘汰堆顶元素
 
+<!-- more -->
+
 ```java
 package com.tomoyadeng.javabeginner.interview;
 

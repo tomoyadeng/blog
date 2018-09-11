@@ -13,6 +13,8 @@ tags: Java
 
 到这里，实现方案已经呼之欲出，这不就是解决分布式缓存问题的套路么 --- 一致性哈希算法，可以参考这篇文章进行了解 [《一致性哈希算法及其在分布式系统中的应用》](http://blog.codinglabs.org/articles/consistent-hashing.html)
 
+<!-- more -->
+
 ### 0x01 接口定义
 
 首先，对几个关键角色进行接口抽象
