@@ -71,7 +71,7 @@
 <link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="docker,spring boot," />
+  <meta name="keywords" content="spring boot,docker," />
 
 
 
@@ -88,14 +88,14 @@
 
 
 <meta name="description" content="0x00 前置条件 Java Maven Docker, Docker Compose  0x01 使用maven新建Spring Boot工程按工程根目录的相对路径创建如下文件 pom.xml12345678910111213141516171819202122232425262728293031323334353637&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8">
-<meta name="keywords" content="docker,spring boot">
+<meta name="keywords" content="spring boot,docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring-boot-mybatis-docker整合使用">
 <meta property="og:url" content="http://yoursite.com/2017/07/23/spring-boot-mybatis-docker/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
 <meta property="og:description" content="0x00 前置条件 Java Maven Docker, Docker Compose  0x01 使用maven新建Spring Boot工程按工程根目录的相对路径创建如下文件 pom.xml12345678910111213141516171819202122232425262728293031323334353637&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-02T09:55:24.118Z">
+<meta property="og:updated_time" content="2018-09-13T15:54:58.601Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spring-boot-mybatis-docker整合使用">
 <meta name="twitter:description" content="0x00 前置条件 Java Maven Docker, Docker Compose  0x01 使用maven新建Spring Boot工程按工程根目录的相对路径创建如下文件 pom.xml12345678910111213141516171819202122232425262728293031323334353637&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8">
@@ -208,6 +208,16 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -341,6 +351,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Framework/" itemprop="url" rel="index">
+                    <span itemprop="name">Framework</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -388,7 +420,7 @@
 <p><code>src/main/java/demo/Application.java</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">home</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Get started"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这样，一个简单的Spring boot的应用就创建OK。可使用<code>mvn package</code>编译打包为jar， 然后使用命令行<code>java -jar target/demo-springboot-docker-1.0.0.jar</code>直接启动</p>
 <h3 id="0x02-将应用docker化"><a href="#0x02-将应用docker化" class="headerlink" title="0x02 将应用docker化"></a>0x02 将应用docker化</h3><p>首先创建应用的Dockerfile</p>
-<p><code>src/main/docker/Dockerfile</code><br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> java:<span class="number">8</span></span><br><span class="line"><span class="keyword">VOLUME</span><span class="bash"> /tmp</span></span><br><span class="line"><span class="bash">ADD demo-springboot-docker-1.0.0.jar app.jar</span></span><br><span class="line"><span class="bash">RUN sh -c <span class="string">'touch /app.jar'</span></span></span><br><span class="line"><span class="bash">ENV JAVA_OPTS=<span class="string">""</span></span></span><br><span class="line"><span class="bash">ENTRYPOINT [ <span class="string">"sh"</span>, <span class="string">"-c"</span>, <span class="string">"java <span class="variable">$JAVA_OPTS</span> -Djava.security.egd=file:/dev/./urandom -jar /app.jar"</span> ]</span></span><br></pre></td></tr></table></figure></p>
+<p><code>src/main/docker/Dockerfile</code><br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> java:<span class="number">8</span></span><br><span class="line"><span class="keyword">VOLUME</span> /tmp</span><br><span class="line">ADD demo-springboot-docker-1.0.0.jar app.jar</span><br><span class="line">RUN sh -c 'touch /app.jar'</span><br><span class="line">ENV JAVA_OPTS=""</span><br><span class="line">ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]</span><br></pre></td></tr></table></figure></p>
 <p>然后在pom.xml中添加maven插件依赖，以支持构建docker镜像</p>
 <p><code>pom.xml</code></p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.spotify<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>docker-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">imageName</span>&gt;</span>tomoyadeng/$&#123;project.artifactId&#125;<span class="tag">&lt;/<span class="name">imageName</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dockerDirectory</span>&gt;</span>src/main/docker<span class="tag">&lt;/<span class="name">dockerDirectory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span>/<span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.build.directory&#125;<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">include</span>&gt;</span>$&#123;project.build.finalName&#125;.jar<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -454,9 +486,9 @@
       
         <div class="post-tags">
           
-            <a href="/blog/tags/docker/" rel="tag"># docker</a>
+            <a href="/blog/tags/spring-boot/" <i class="fa fa-tag"></i> spring boot</a>
           
-            <a href="/blog/tags/spring-boot/" rel="tag"># spring boot</a>
+            <a href="/blog/tags/docker/" <i class="fa fa-tag"></i> docker</a>
           
         </div>
       
@@ -562,6 +594,15 @@
             </div>
           
 
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
           
 
           

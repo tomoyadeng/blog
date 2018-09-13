@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
 <meta property="og:description" content="最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。 采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：  对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。 而且，需要保证在某个采集器失效离线时，之前">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-11T14:17:12.307Z">
+<meta property="og:updated_time" content="2018-09-13T15:52:47.126Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一致性哈希算法的一次实践">
 <meta name="twitter:description" content="最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。 采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：  对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。 而且，需要保证在某个采集器失效离线时，之前">
@@ -208,6 +208,16 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -341,6 +351,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -426,7 +458,7 @@
       
         <div class="post-tags">
           
-            <a href="/blog/tags/Java/" rel="tag"># Java</a>
+            <a href="/blog/tags/Java/" <i class="fa fa-tag"></i> Java</a>
           
         </div>
       
@@ -536,6 +568,15 @@
             </div>
           
 
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
           
 
           
