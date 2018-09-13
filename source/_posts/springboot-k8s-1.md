@@ -3,6 +3,7 @@ title: K8s折腾日记(一)--在Kubernetes中部署spring boot应用
 tags:
   - kubernetes
   - spring boot
+categories: Cloud Computing
 date: 2018-09-13 23:22:43
 ---
 

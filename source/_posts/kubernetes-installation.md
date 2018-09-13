@@ -1,6 +1,7 @@
 ---
 title: kubernetes 安装笔记
 tags: kubernetes
+categories: Cloud Computing
 date: 2018-05-06 14:32:31
 ---
 

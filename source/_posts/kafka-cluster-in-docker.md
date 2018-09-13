@@ -3,6 +3,7 @@ title: 使用Docker快速搭建Kafka开发环境
 tags: 
     - kafka
     - docker
+categories: Middleware
 date: 2018-06-02 17:46:22
 ---
 
