@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
 <meta property="og:description" content="基于容器的微服务架构目前已经成为了开发应用系统的主流，Kubernetes 则是运行微服务应用的理想平台。基于没事儿瞎折腾的态度，自己最近有空闲时间也开始鼓捣起了k8s，经过一步步摸索，终于完成安装和部署。接下来就先分享一下怎么在 kubernetes 中部署一个简单 Spring boot 的应用。 0x00 环境准备 minikube gradle  minikube 的安装可以参考使用min">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-13T15:54:17.848Z">
+<meta property="og:updated_time" content="2018-09-15T14:34:25.654Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="K8s折腾日记(一)--在Kubernetes中部署spring boot应用">
 <meta name="twitter:description" content="基于容器的微服务架构目前已经成为了开发应用系统的主流，Kubernetes 则是运行微服务应用的理想平台。基于没事儿瞎折腾的态度，自己最近有空闲时间也开始鼓捣起了k8s，经过一步步摸索，终于完成安装和部署。接下来就先分享一下怎么在 kubernetes 中部署一个简单 Spring boot 的应用。 0x00 环境准备 minikube gradle  minikube 的安装可以参考使用min">
@@ -435,6 +435,9 @@
 <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl expose deployment k8s-service --type=LoadBalancer</span><br></pre></td></tr></table></figure>
 <p>随后可以通过 <code>curl $(minikube service k8s-service --url)/hello</code> 验证部署是否成功。部署的pod的日志可以通过 <code>kubectl log &lt;Pod Name&gt;</code> 来查看。</p>
 <p>完整代码参考<a href="https://github.com/tomoyadeng/demo-springboot-k8s" target="_blank" rel="noopener">Github</a></p>
+<h2 id="0x04-参考资料"><a href="#0x04-参考资料" class="headerlink" title="0x04 参考资料"></a>0x04 参考资料</h2><ul>
+<li><a href="https://k8smeetup.github.io/docs/tutorials/stateless-application/hello-minikube/" target="_blank" rel="noopener">你好 Minikube</a></li>
+</ul>
 
       
     </div>
@@ -488,6 +491,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/09/16/springboot-k8s-2/" rel="prev" title="K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用">
+                K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -566,7 +573,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/blog/archives">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -623,7 +630,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-环境准备"><span class="nav-number">1.</span> <span class="nav-text">0x00 环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-构建-Spring-boot-应用"><span class="nav-number">2.</span> <span class="nav-text">0x01 构建 Spring boot 应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-将应用打包成-Docker-镜像"><span class="nav-number">3.</span> <span class="nav-text">0x02 将应用打包成 Docker 镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-将镜像部署到kubernetes中"><span class="nav-number">4.</span> <span class="nav-text">0x03 将镜像部署到kubernetes中</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Deployment"><span class="nav-number">4.1.</span> <span class="nav-text">创建 Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Service"><span class="nav-number">4.2.</span> <span class="nav-text">创建 Service</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-环境准备"><span class="nav-number">1.</span> <span class="nav-text">0x00 环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-构建-Spring-boot-应用"><span class="nav-number">2.</span> <span class="nav-text">0x01 构建 Spring boot 应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-将应用打包成-Docker-镜像"><span class="nav-number">3.</span> <span class="nav-text">0x02 将应用打包成 Docker 镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-将镜像部署到kubernetes中"><span class="nav-number">4.</span> <span class="nav-text">0x03 将镜像部署到kubernetes中</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Deployment"><span class="nav-number">4.1.</span> <span class="nav-text">创建 Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Service"><span class="nav-number">4.2.</span> <span class="nav-text">创建 Service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-参考资料"><span class="nav-number">5.</span> <span class="nav-text">0x04 参考资料</span></a></li></ol></div>
             
 
           </div>
