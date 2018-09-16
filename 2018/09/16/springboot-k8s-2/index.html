@@ -71,7 +71,7 @@
 <link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="kubernetes,spring boot," />
+  <meta name="keywords" content="kubernetes,mysql," />
 
 
 
@@ -88,14 +88,14 @@
 
 
 <meta name="description" content="之前已经尝试在Kubernetes中部署了一个简单的Spring boot应用，但这个应用是无状态的，这次主要折腾一下如何运行一个单实例有状态应用(MySQL) 0x01 定义持久化磁盘Kubernetes 中使用 Volume 来持久化保存容器的数据，Volume 的生命周期独立于容器， Pod 中的容器可能频繁的被销毁和重建，但 Volume 会被保留。 从本质上来将， Kubernetes">
-<meta name="keywords" content="kubernetes,spring boot">
+<meta name="keywords" content="kubernetes,mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用">
 <meta property="og:url" content="http://yoursite.com/2018/09/16/springboot-k8s-2/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
 <meta property="og:description" content="之前已经尝试在Kubernetes中部署了一个简单的Spring boot应用，但这个应用是无状态的，这次主要折腾一下如何运行一个单实例有状态应用(MySQL) 0x01 定义持久化磁盘Kubernetes 中使用 Volume 来持久化保存容器的数据，Volume 的生命周期独立于容器， Pod 中的容器可能频繁的被销毁和重建，但 Volume 会被保留。 从本质上来将， Kubernetes">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-16T03:52:22.383Z">
+<meta property="og:updated_time" content="2018-09-16T03:59:00.914Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用">
 <meta name="twitter:description" content="之前已经尝试在Kubernetes中部署了一个简单的Spring boot应用，但这个应用是无状态的，这次主要折腾一下如何运行一个单实例有状态应用(MySQL) 0x01 定义持久化磁盘Kubernetes 中使用 Volume 来持久化保存容器的数据，Volume 的生命周期独立于容器， Pod 中的容器可能频繁的被销毁和重建，但 Volume 会被保留。 从本质上来将， Kubernetes">
@@ -413,6 +413,7 @@
 <h2 id="0x01-定义持久化磁盘"><a href="#0x01-定义持久化磁盘" class="headerlink" title="0x01 定义持久化磁盘"></a>0x01 定义持久化磁盘</h2><p>Kubernetes 中使用 Volume 来持久化保存容器的数据，Volume 的生命周期独立于容器， Pod 中的容器可能频繁的被销毁和重建，但 Volume 会被保留。</p>
 <p>从本质上来将， Kubernetes Volume 是一个目录，但 Volume 提供了对各种backend 的抽象，容器使用 Volume 时不用关心数据到底是存在本地节点的文件系统中还是类似 EBS 这种云硬盘中。</p>
 <p>接下来，就通过 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/" target="_blank" rel="noopener">PersistentVolume</a> 定义一个持久化磁盘：</p>
+<a id="more"></a>
 <p>为了方便，使用 hostPath 这种 Volume，这种类型是映射到主机上目录的卷，应该只用于测试目的或者单节点集群。</p>
 <p>新建 <code>local-volume.yaml</code></p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-pv</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  capacity:</span></span><br><span class="line"><span class="attr">    storage:</span> <span class="number">5</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  volumeMode:</span> <span class="string">Filesystem</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteOnce</span></span><br><span class="line"><span class="attr">  hostPath:</span></span><br><span class="line"><span class="attr">    path:</span> <span class="string">/data/mysql</span></span><br></pre></td></tr></table></figure>
@@ -441,6 +442,10 @@
 If you don&apos;t see a command prompt, try pressing enter.
 mysql&gt;
 </code></pre><p>至此，单实例的 MySQL 就在 Kubernetes 中部署成功了。</p>
+<h2 id="0x05-参考资料"><a href="#0x05-参考资料" class="headerlink" title="0x05 参考资料"></a>0x05 参考资料</h2><ul>
+<li><a href="https://kubernetes.io/cn/docs/tasks/run-application/run-single-instance-stateful-application/" target="_blank" rel="noopener">运行一个单实例有状态应用</a></li>
+<li><a href="https://kubernetes.io/cn/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/" target="_blank" rel="noopener">基于 Persistent Volumes 搭建 WordPress 和 MySQL 应用</a></li>
+</ul>
 
       
     </div>
@@ -472,7 +477,7 @@ mysql&gt;
           
             <a href="/blog/tags/kubernetes/" <i class="fa fa-tag"></i> kubernetes</a>
           
-            <a href="/blog/tags/spring-boot/" <i class="fa fa-tag"></i> spring boot</a>
+            <a href="/blog/tags/mysql/" <i class="fa fa-tag"></i> mysql</a>
           
         </div>
       
@@ -594,7 +599,7 @@ mysql&gt;
             
             <div class="site-state-item site-state-tags">
               <a href="/blog/tags/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -629,7 +634,7 @@ mysql&gt;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-定义持久化磁盘"><span class="nav-number">1.</span> <span class="nav-text">0x01 定义持久化磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-创建-MySQL-密码-Secret"><span class="nav-number">2.</span> <span class="nav-text">0x02 创建 MySQL 密码 Secret</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-部署-MySQL"><span class="nav-number">3.</span> <span class="nav-text">0x03 部署 MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-访问-MySQL-实例"><span class="nav-number">4.</span> <span class="nav-text">0x04 访问 MySQL 实例</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-定义持久化磁盘"><span class="nav-number">1.</span> <span class="nav-text">0x01 定义持久化磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-创建-MySQL-密码-Secret"><span class="nav-number">2.</span> <span class="nav-text">0x02 创建 MySQL 密码 Secret</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-部署-MySQL"><span class="nav-number">3.</span> <span class="nav-text">0x03 部署 MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-访问-MySQL-实例"><span class="nav-number">4.</span> <span class="nav-text">0x04 访问 MySQL 实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-参考资料"><span class="nav-number">5.</span> <span class="nav-text">0x05 参考资料</span></a></li></ol></div>
             
 
           </div>
