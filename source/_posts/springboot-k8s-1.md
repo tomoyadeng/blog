@@ -167,3 +167,7 @@ kubectl expose deployment k8s-service --type=LoadBalancer
 随后可以通过 `curl $(minikube service k8s-service --url)/hello` 验证部署是否成功。部署的pod的日志可以通过 `kubectl log <Pod Name>` 来查看。
 
 完整代码参考[Github](https://github.com/tomoyadeng/demo-springboot-k8s)
+
+## 0x04 参考资料
+
++ [你好 Minikube](https://k8smeetup.github.io/docs/tutorials/stateless-application/hello-minikube/)
