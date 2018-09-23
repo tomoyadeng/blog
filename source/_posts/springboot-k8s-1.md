@@ -115,7 +115,7 @@ task buildDocker(type: Docker, dependsOn: build) {
     }
     volume "/tmp"
     addFile("${bootJar.baseName}-${bootJar.version}.jar", "app.jar")
-    entryPoint(Arrays.asList("java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=docker", "-jar", "/app.jar"))
+    entryPoint(Arrays.asList("java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=k8s", "-jar", "/app.jar"))
 }
 ```
 
