@@ -234,3 +234,13 @@ public void someMethod() {
 ```console
 2018-09-24 01:20:55.267  INFO 11748 --- [           main] c.t.s.service.CustomizeService           : someMethod [sleep 1 s] cost 1.007s
 ```
+
+## 0x03 总结
+
+通过 Spring AOP 结合自定义注解，可以实现精确记录某些方法的耗时时间，这种方式简单方便，可以少写很多重复代码。但值得注意的是，这种方式还是存在一些限制的，这种方式只能用于public的方法上，这是由Spring AOP的实现原理决定的。可以参考官方文档的解释：
+
+[9.2.3 Declaring a pointcut#Supported Pointcut Designators](https://docs.spring.io/spring/docs/4.1.x/spring-framework-reference/html/aop.html#aop-pointcuts-designators)
+
+> Due to the proxy-based nature of Spring’s AOP framework, protected methods are by definition not intercepted, neither for JDK proxies (where this isn’t applicable) nor for CGLIB proxies (where this is technically possible but not recommendable for AOP purposes). As a consequence, any given pointcut will be matched against public methods only!
+
+> If your interception needs include protected/private methods or even constructors, consider the use of Spring-driven native AspectJ weaving instead of Spring’s proxy-based AOP framework. This constitutes a different mode of AOP usage with different characteristics, so be sure to make yourself familiar with weaving first before making a decision.
