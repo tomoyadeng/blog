@@ -7,7 +7,7 @@
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
 <meta property="og:description" content="0x00 一切为了少写代码最近在重构一块儿业务代码的时候发现：有好几个类中有大量重复的代码，其实都在干同一件事，就是记录方法执行所耗时间，代码大概长这个样子： 1234567891011public void doSomething() &amp;#123;    long start = System.currentTimeMillis();    try &amp;#123;        // doSome">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-24T04:06:21.502Z">
+<meta property="og:updated_time" content="2018-09-24T10:14:34.755Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Spring AOP &amp; 自定义注解 记录日志">
 <meta name="twitter:description" content="0x00 一切为了少写代码最近在重构一块儿业务代码的时候发现：有好几个类中有大量重复的代码，其实都在干同一件事，就是记录方法执行所耗时间，代码大概长这个样子： 1234567891011public void doSomething() &amp;#123;    long start = System.currentTimeMillis();    try &amp;#123;        // doSome">
@@ -132,7 +132,7 @@
 
 
 
-  <title> 使用Spring AOP & 自定义注解 记录日志 | Tomoya's Blog </title>
+  <title> 使用Spring AOP & 自定义注解 记录日志 | Tomoya's Blog </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -142,7 +142,7 @@
 
 
 
-<script>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -437,6 +437,14 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@LogTimeCost</span>(msg = <span class="string">"sleep 1 s"</span>, threshold = <span class="number">500</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">someMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最后，再跑一下测试</p>
 <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2018-09-24 01:20:55.267  INFO 11748 --- [           main] c.t.s.service.CustomizeService           : someMethod [sleep 1 s] cost 1.007s</span><br></pre></td></tr></table></figure>
+<h2 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h2><p>通过 Spring AOP 结合自定义注解，可以实现精确记录某些方法的耗时时间，这种方式简单方便，可以少写很多重复代码。但值得注意的是，这种方式还是存在一些限制的，这种方式只能用于public的方法上，这是由Spring AOP的实现原理决定的。可以参考官方文档的解释：</p>
+<p><a href="https://docs.spring.io/spring/docs/4.1.x/spring-framework-reference/html/aop.html#aop-pointcuts-designators" target="_blank" rel="noopener">9.2.3 Declaring a pointcut#Supported Pointcut Designators</a></p>
+<blockquote>
+<p>Due to the proxy-based nature of Spring’s AOP framework, protected methods are by definition not intercepted, neither for JDK proxies (where this isn’t applicable) nor for CGLIB proxies (where this is technically possible but not recommendable for AOP purposes). As a consequence, any given pointcut will be matched against public methods only!</p>
+</blockquote>
+<blockquote>
+<p>If your interception needs include protected/private methods or even constructors, consider the use of Spring-driven native AspectJ weaving instead of Spring’s proxy-based AOP framework. This constitutes a different mode of AOP usage with different characteristics, so be sure to make yourself familiar with weaving first before making a decision.</p>
+</blockquote>
 
       
     </div>
@@ -488,6 +496,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/10/07/simplify-code-with-stream-api/" rel="prev" title="使用 Stream API 简化代码">
+                使用 Stream API 简化代码 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -566,7 +578,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/blog/archives">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -623,7 +635,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-一切为了少写代码"><span class="nav-number">1.</span> <span class="nav-text">0x00 一切为了少写代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-高举-Spring-AOP-大旗"><span class="nav-number">2.</span> <span class="nav-text">0x01 高举 Spring AOP 大旗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-插上注解的翅膀"><span class="nav-number">3.</span> <span class="nav-text">0x02 插上注解的翅膀</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-一切为了少写代码"><span class="nav-number">1.</span> <span class="nav-text">0x00 一切为了少写代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-高举-Spring-AOP-大旗"><span class="nav-number">2.</span> <span class="nav-text">0x01 高举 Spring AOP 大旗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-插上注解的翅膀"><span class="nav-number">3.</span> <span class="nav-text">0x02 插上注解的翅膀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-总结"><span class="nav-number">4.</span> <span class="nav-text">0x03 总结</span></a></li></ol></div>
             
 
           </div>
@@ -927,7 +939,7 @@
     $('.popup').click(function(e){
       e.stopPropagation();
     });
-  </script>
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 
