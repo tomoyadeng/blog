@@ -437,13 +437,13 @@
  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~/docker/kafka# docker exec -it kafka_kafka_1 /bin/bash</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>创建一个topic并查看，需要指定zookeeper的容器名(这里是kafka_zookeeper_1)，topic的名字为test</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-topics.sh --create --topic test --zookeeper kafka_zookeeper_1:2181 --replication-factor 1 --partitions 1</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-topics.sh --list --zookeeper kafka_zookeeper_1:2181</span><br></pre></td></tr></table></figure>
+ <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-topics.sh --create --topic <span class="built_in">test</span> --zookeeper kafka_zookeeper_1:2181 --replication-factor 1 --partitions 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-topics.sh --list --zookeeper kafka_zookeeper_1:2181</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>发布消息，输入几条消息后，按^C退出发布</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-console-producer.sh --topic=test --broker-list kafka_kafka_1:9092</span><br></pre></td></tr></table></figure>
+ <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-console-producer.sh --topic=<span class="built_in">test</span> --broker-list kafka_kafka_1:9092</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>接受消息</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server kafka_kafka_1:9092 --from-beginning --topic test</span><br></pre></td></tr></table></figure>
+ <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server kafka_kafka_1:9092 --from-beginning --topic <span class="built_in">test</span></span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>如果接收到了发布的消息，那么说明部署正常，可以正式使用了。</p>
