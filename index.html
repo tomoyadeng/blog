@@ -1,2317 +1,831 @@
-<!doctype html>
-
-
-
-  
-
-
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<!DOCTYPE html>
+<html lang=zh>
 <head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
   
   
-  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
-
-
-
-
-
-
-<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Hexo, NexT" />
-
-
-
-
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/blog/favicon.ico?v=5.1.0" />
-
-
-
-
-
-
-<meta property="og:type" content="website">
+  <title>Hexo</title>
+  <meta property="og:type" content="website">
 <meta property="og:title" content="Tomoya&#39;s Blog">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tomoya&#39;s Blog">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/blog/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://yoursite.com/"/>
-
-
-
-
-
-  <title> Tomoya's Blog </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Tomoya&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+  
+  
+  
+  
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/tomoyadeng" target="_blank">
+          <img class="img-circle img-rotate" src="/blog/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Tomoya Deng</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
 
-
-
-
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-110963769-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left 
-   page-home 
- ">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/blog/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Tomoya's Blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
     </div>
-      
-        <p class="site-subtitle"></p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
-  
-    <ul id="menu" class="menu">
-      
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
         
         <li class="menu-item menu-item-home">
-          <a href="/blog/" rel="section">
+          <a href="/blog/.">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            <i class="icon icon-home-fill"></i>
             
-            首页
+            <span class="menu-title">Home</span>
           </a>
         </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/blog/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
         
         <li class="menu-item menu-item-archives">
-          <a href="/blog/archives" rel="section">
+          <a href="/blog/archives">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            <i class="icon icon-archives-fill"></i>
             
-            归档
+            <span class="menu-title">Archives</span>
           </a>
         </li>
-      
+        
         
         <li class="menu-item menu-item-tags">
-          <a href="/blog/tags" rel="section">
+          <a href="/blog/tags">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            <i class="icon icon-tags"></i>
             
-            标签
+            <span class="menu-title">Tags</span>
           </a>
         </li>
-      
-
-      
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/blog/books">
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            <i class="icon icon-book-fill"></i>
             
-            搜索
+            <span class="menu-title">Books</span>
           </a>
         </li>
+        
+      </ul>
       
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
     </ul>
-  
+
+    </nav>
+  </div>
+</header>
 
   
-    <div class="site-search">
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
       
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Framework/">Framework</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java/">Java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Middleware/">Middleware</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
-  <div id="local-search-result"></div>
-</div>
 
 
-
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kafka/">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kubernetes/">kubernetes</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring-boot/">spring boot</a><span class="tag-list-count">2</span></li></ul>
     </div>
-  
-</nav>
+  </div>
 
 
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-  <section id="posts" class="posts-expand">
     
       
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/10/12/k8s-in-ubuntu18.04/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/blog/tags/Java/" style="font-size: 13.67px;">Java</a> <a href="/blog/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/blog/tags/kafka/" style="font-size: 13px;">kafka</a> <a href="/blog/tags/kubernetes/" style="font-size: 14px;">kubernetes</a> <a href="/blog/tags/mysql/" style="font-size: 13.33px;">mysql</a> <a href="/blog/tags/spring/" style="font-size: 13px;">spring</a> <a href="/blog/tags/spring-boot/" style="font-size: 13.33px;">spring boot</a>
+    </div>
+  </div>
 
     
-      <header class="post-header">
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/09/">September 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/10/12/k8s-in-ubuntu18.04/" itemprop="url">
-                  K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群
-                </a>
-              
-            
-          </h1>
-        
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-12T20:13:48+08:00">
-                2018-10-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Cloud-Computing/" itemprop="url" rel="index">
-                    <span itemprop="name">Cloud Computing</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/10/12/k8s-in-ubuntu18.04/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/12/k8s-in-ubuntu18.04/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
     
-
-
-    <div class="post-body" itemprop="articleBody">
-
       
-      
-
-      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
         
-          <p><strong>基于 Kubernetes 1.12.1</strong></p>
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/12/k8s-in-ubuntu18.04/" class="title">K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-12T12:13:48.000Z" itemprop="datePublished">2018-10-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/07/simplify-code-with-stream-api/" class="title">使用 Stream API 简化代码</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-07T13:11:07.000Z" itemprop="datePublished">2018-10-07</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Framework/">Framework</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/09/24/logging-with-aop-and-annotation/" class="title">使用Spring AOP &amp; 自定义注解 记录日志</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-09-24T04:04:16.000Z" itemprop="datePublished">2018-09-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/09/23/springboot-k8s-3/" class="title">K8s折腾日记(三)--为MySQL提供REST API</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-09-23T03:10:13.000Z" itemprop="datePublished">2018-09-23</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/09/16/springboot-k8s-2/" class="title">K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-09-16T03:52:22.000Z" itemprop="datePublished">2018-09-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  <main class="main" role="main">
+  
+  <div class="content article-list">
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/10/12/k8s-in-ubuntu18.04/">K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群</a>
+    </h1>
+  
+
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <p><strong>基于 Kubernetes 1.12.1</strong></p>
 <p>之前折腾K8s的时候一直使用的是在 Ubuntu 虚拟机上起的 minikube，最近想在我的笔记本上使用多台虚拟机部署一套 Kubernetes 集群。正好今年上半年 Ubuntu 发布了新的LTS版本 – 18.04 (Bionic Beaver)，于是便有了这篇文章，在 Ubuntu 18.04 上折腾安装部署 K8s 集群。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/10/12/k8s-in-ubuntu18.04/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/10/12/k8s-in-ubuntu18.04/" class="article-date">
+	  <time datetime="2018-10-12T12:13:48.000Z" itemprop="datePublished">Oct 12</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+  </span>
 
     
-      
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/kubernetes/">kubernetes</a>
+  </span>
 
-  
 
-  
-  
-  
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/10/12/k8s-in-ubuntu18.04/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 2.1k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 9(minutes)</span>
+	
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/10/07/simplify-code-with-stream-api/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
+  </p>
+</article>
 
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/10/07/simplify-code-with-stream-api/" itemprop="url">
-                  使用 Stream API 简化代码
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-07T21:11:07+08:00">
-                2018-10-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/10/07/simplify-code-with-stream-api/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/07/simplify-code-with-stream-api/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/10/07/simplify-code-with-stream-api/">使用 Stream API 简化代码</a>
+    </h1>
+  
 
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Stream API 是 Java 8 新引入的特性，用来增强集合操作。前段时间，在开发新需求以及重构老代码的时候，我开始尝试使用Java Stream API，使写出的代码更简洁也更易维护。这篇文章便对 Java Stream API 做一个总结，也记录一下我在使用过程中的一些心得和技巧。</p>
-<h2 id="0x01-从一个简单场景讲起"><a href="#0x01-从一个简单场景讲起" class="headerlink" title="0x01 从一个简单场景讲起"></a>0x01 从一个简单场景讲起</h2><p>先考虑这样一种可能在游戏代码里遇到的场景：每个玩家可以创建和培养众多游戏角色，现在从数据库或者其他地方获得了一批游戏角色信息，需要过滤出角色等级大于60的角色，并按照玩家ID进行归并。</p>
-<p>这是一个常见的对数据进行过滤并归并的操作，如果在使用 JDK 7 的时候，我们的代码可能长这个样子：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/10/07/simplify-code-with-stream-api/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <p>Stream API 是 Java 8 新引入的特性，用来增强集合操作。前段时间，在开发新需求以及重构老代码的时候，我开始尝试使用Java Stream API，使写出的代码更简洁也更易维护。这篇文章便对 Java Stream API 做一个总结，也记录一下我在使用过程中的一些心得和技巧。</p>
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/10/07/simplify-code-with-stream-api/" class="article-date">
+	  <time datetime="2018-10-07T13:11:07.000Z" itemprop="datePublished">Oct 7</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Java/">Java</a>
+  </span>
 
     
-      
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/Java/">Java</a>
+  </span>
 
-  
 
-  
-  
-  
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/10/07/simplify-code-with-stream-api/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 4.2k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 17(minutes)</span>
+	
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/09/24/logging-with-aop-and-annotation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
+  </p>
+</article>
 
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/09/24/logging-with-aop-and-annotation/" itemprop="url">
-                  使用Spring AOP & 自定义注解 记录日志
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-24T12:04:16+08:00">
-                2018-09-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Framework/" itemprop="url" rel="index">
-                    <span itemprop="name">Framework</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/09/24/logging-with-aop-and-annotation/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/09/24/logging-with-aop-and-annotation/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/09/24/logging-with-aop-and-annotation/">使用Spring AOP &amp; 自定义注解 记录日志</a>
+    </h1>
+  
 
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="0x00-一切为了少写代码"><a href="#0x00-一切为了少写代码" class="headerlink" title="0x00 一切为了少写代码"></a>0x00 一切为了少写代码</h2><p>最近在重构一块儿业务代码的时候发现：有好几个类中有大量重复的代码，其实都在干同一件事，就是记录方法执行所耗时间，代码大概长这个样子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// doSomeTimeConsumingTasks</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">long</span> cost = System.currentTimeMillis() - start;</span><br><span class="line">        <span class="keyword">if</span> (cost &gt; <span class="number">1000</span>) &#123;</span><br><span class="line">            logger.info(<span class="string">"doSomething cost &#123;&#125;s"</span>, cost / <span class="number">1000.0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>数了一数，在一个方法里和具体业务并无关系的日志记录代码就占了8行。不对，在我们部门的code style里，左边的大括号是要换行的，代码应该长这个样子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// doSomeTimeConsumingTasks</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">long</span> cost = System.currentTimeMillis() - start;</span><br><span class="line">        <span class="keyword">if</span> (cost &gt; <span class="number">1000</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            logger.info(<span class="string">"doSomething cost &#123;&#125;s"</span>, cost / <span class="number">1000.0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在和具体业务并无关系的日志记录代码就变成12行了，如果多写几遍这样的方法，大概一个月的代码量KPI就够了。</p>
-<p>不过，要做一个还算有点追求的程序猿，还是要力求在实现相同功能的前提下少写代码的，毕竟代码多了会让人没有读下去的欲望，不利于后期维护。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/09/24/logging-with-aop-and-annotation/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/09/24/logging-with-aop-and-annotation/" class="article-date">
+	  <time datetime="2018-09-24T04:04:16.000Z" itemprop="datePublished">Sep 24</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Framework/">Framework</a>
+  </span>
 
     
-      
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/spring/">spring</a>
+  </span>
 
-  
 
-  
-  
-  
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/09/24/logging-with-aop-and-annotation/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.4k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 6(minutes)</span>
+	
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/09/23/springboot-k8s-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
+  </p>
+</article>
 
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/09/23/springboot-k8s-3/" itemprop="url">
-                  K8s折腾日记(三)--为MySQL提供REST API
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-23T11:10:13+08:00">
-                2018-09-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Cloud-Computing/" itemprop="url" rel="index">
-                    <span itemprop="name">Cloud Computing</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/09/23/springboot-k8s-3/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/09/23/springboot-k8s-3/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/09/23/springboot-k8s-3/">K8s折腾日记(三)--为MySQL提供REST API</a>
+    </h1>
+  
 
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在上一次的日志中，已经在 Kubernetes 中部署了一个单实例的 MySQL，接下来就是创建一个微服务来提供 MySQL 的 REST API， 让其他微服务能够通过 REST API 来访问数据库中的资源。</p>
-<p><a href="https://github.com/tomoyadeng/demo-springboot-k8s" target="_blank" rel="noopener">本项目源码</a></p>
-<h2 id="0x01-新建-Spring-boot-服务"><a href="#0x01-新建-Spring-boot-服务" class="headerlink" title="0x01 新建 Spring boot 服务"></a>0x01 新建 Spring boot 服务</h2><p>在原有的父工程下新建一个 Module 命名为 <code>k8s-db</code>，新增如下的依赖</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">compile(<span class="string">'org.springframework.boot:spring-boot-starter-web'</span>)</span><br><span class="line">compile(<span class="string">"org.springframework.boot:spring-boot-starter-data-jpa"</span>)</span><br><span class="line">compile <span class="string">'mysql:mysql-connector-java'</span></span><br><span class="line">compile <span class="string">group:</span> <span class="string">'javax.xml.bind'</span>, <span class="string">name:</span> <span class="string">'jaxb-api'</span>, <span class="string">version:</span> <span class="string">'2.3.0'</span></span><br></pre></td></tr></table></figure>
-<p>注： <code>k8s-db</code> 是 <code>demo-springboot-k8s</code> 下的子工程，会继承在父工程引入的一些依赖包和定义的 task。<code>jaxb-api</code> 是在使用 JDK 9 以上的 JDK 版本时需要引入的依赖，因为它是 Java EE 里面的 module，在JDK 9 之后便从默认的包里面移除了，需要手动引入。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/09/23/springboot-k8s-3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <p>在上一次的日志中，已经在 Kubernetes 中部署了一个单实例的 MySQL，接下来就是创建一个微服务来提供 MySQL 的 REST API， 让其他微服务能够通过 REST API 来访问数据库中的资源。</p>
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/09/23/springboot-k8s-3/" class="article-date">
+	  <time datetime="2018-09-23T03:10:13.000Z" itemprop="datePublished">Sep 23</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+  </span>
 
     
-      
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/kubernetes/">kubernetes</a>, <a class="article-tag-link" href="/blog/tags/mysql/">mysql</a>
+  </span>
 
-  
 
-  
-  
-  
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/09/23/springboot-k8s-3/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.2k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5(minutes)</span>
+	
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/09/16/springboot-k8s-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
+  </p>
+</article>
 
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/09/16/springboot-k8s-2/" itemprop="url">
-                  K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-16T11:52:22+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Cloud-Computing/" itemprop="url" rel="index">
-                    <span itemprop="name">Cloud Computing</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/09/16/springboot-k8s-2/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/09/16/springboot-k8s-2/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/09/16/springboot-k8s-2/">K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用</a>
+    </h1>
+  
 
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>之前已经尝试在Kubernetes中部署了一个简单的Spring boot应用，但这个应用是无状态的，这次主要折腾一下如何运行一个单实例有状态应用(MySQL)</p>
-<h2 id="0x01-定义持久化磁盘"><a href="#0x01-定义持久化磁盘" class="headerlink" title="0x01 定义持久化磁盘"></a>0x01 定义持久化磁盘</h2><p>Kubernetes 中使用 Volume 来持久化保存容器的数据，Volume 的生命周期独立于容器， Pod 中的容器可能频繁的被销毁和重建，但 Volume 会被保留。</p>
-<p>从本质上来将， Kubernetes Volume 是一个目录，但 Volume 提供了对各种backend 的抽象，容器使用 Volume 时不用关心数据到底是存在本地节点的文件系统中还是类似 EBS 这种云硬盘中。</p>
-<p>接下来，就通过 <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/" target="_blank" rel="noopener">PersistentVolume</a> 定义一个持久化磁盘：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/09/16/springboot-k8s-2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <p>之前已经尝试在Kubernetes中部署了一个简单的Spring boot应用，但这个应用是无状态的，这次主要折腾一下如何运行一个单实例有状态应用(MySQL)</p>
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/09/16/springboot-k8s-2/" class="article-date">
+	  <time datetime="2018-09-16T03:52:22.000Z" itemprop="datePublished">Sep 16</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+  </span>
 
     
-      
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/kubernetes/">kubernetes</a>, <a class="article-tag-link" href="/blog/tags/mysql/">mysql</a>
+  </span>
 
-  
 
-  
-  
-  
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/09/16/springboot-k8s-2/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 812(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3(minutes)</span>
+	
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/09/13/springboot-k8s-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
+  </p>
+</article>
 
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/09/13/springboot-k8s-1/" itemprop="url">
-                  K8s折腾日记(一)--在Kubernetes中部署spring boot应用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-13T23:22:43+08:00">
-                2018-09-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Cloud-Computing/" itemprop="url" rel="index">
-                    <span itemprop="name">Cloud Computing</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/09/13/springboot-k8s-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/09/13/springboot-k8s-1/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>基于容器的微服务架构目前已经成为了开发应用系统的主流，Kubernetes 则是运行微服务应用的理想平台。基于没事儿瞎折腾的态度，自己最近有空闲时间也开始鼓捣起了k8s，经过一步步摸索，终于完成安装和部署。接下来就先分享一下怎么在 kubernetes 中部署一个简单 Spring boot 的应用。</p>
-<h2 id="0x00-环境准备"><a href="#0x00-环境准备" class="headerlink" title="0x00 环境准备"></a>0x00 环境准备</h2><ul>
-<li>minikube</li>
-<li>gradle</li>
-</ul>
-<p>minikube 的安装可以参考<a href="https://yq.aliyun.com/articles/574255" target="_blank" rel="noopener">使用minikube安装k8s单节点集群</a></p>
-<h2 id="0x01-构建-Spring-boot-应用"><a href="#0x01-构建-Spring-boot-应用" class="headerlink" title="0x01 构建 Spring boot 应用"></a>0x01 构建 Spring boot 应用</h2><p>首先，新建一个Spring Boot应用，姑且命名为<code>k8s-service</code>，这个应用就提供一个简单的接口，便于验证是否部署成功。</p>
-<p>MainClass:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tomoyadeng.demo.springboot.k8s.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">K8sServiceApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(K8sServiceApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/09/13/springboot-k8s-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/09/13/springboot-k8s-1/">K8s折腾日记(一)--在Kubernetes中部署spring boot应用</a>
+    </h1>
   
 
+  </div>
   
+  <div class="article-entry text-muted" itemprop="description">
+    <p>基于容器的微服务架构目前已经成为了开发应用系统的主流，Kubernetes 则是运行微服务应用的理想平台。基于没事儿瞎折腾的态度，自己最近有空闲时间也开始鼓捣起了k8s，经过一步步摸索，终于完成安装和部署。接下来就先分享一下怎么在 kubernetes 中部署一个简单 Spring boot 的应用。</p>
+  </div>
   
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/06/09/consistent-hashing-practice/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/09/13/springboot-k8s-1/" class="article-date">
+	  <time datetime="2018-09-13T15:22:43.000Z" itemprop="datePublished">Sep 13</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+  </span>
 
     
-      <header class="post-header">
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/kubernetes/">kubernetes</a>, <a class="article-tag-link" href="/blog/tags/spring-boot/">spring boot</a>
+  </span>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/06/09/consistent-hashing-practice/" itemprop="url">
-                  一致性哈希算法的一次实践
-                </a>
-              
-            
-          </h1>
-        
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-09T22:18:17+08:00">
-                2018-06-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/06/09/consistent-hashing-practice/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/06/09/consistent-hashing-practice/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/09/13/springboot-k8s-1/#comments" class="article-comment-link">Comments</a></span>
     
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 888(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4(minutes)</span>
+	
 
+  </p>
+</article>
 
-    <div class="post-body" itemprop="articleBody">
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/06/09/consistent-hashing-practice/">一致性哈希算法的一次实践</a>
+    </h1>
+  
 
-      
-      
-
-      
-        
-          <p>最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。</p>
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <p>最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。</p>
 <p>采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：</p>
 <ul>
 <li>对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。</li>
 <li>而且，需要保证在某个采集器失效离线时，之前落在该采集器上的设备列表需要均匀分布到剩下的采集器上去，不至于造成某一个采集器负载过大。</li>
 </ul>
 <p>到这里，实现方案已经呼之欲出，这不就是解决分布式缓存问题的套路么 — 一致性哈希算法，可以参考这篇文章进行了解 <a href="http://blog.codinglabs.org/articles/consistent-hashing.html" target="_blank" rel="noopener">《一致性哈希算法及其在分布式系统中的应用》</a></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/06/09/consistent-hashing-practice/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/06/02/kafka-cluster-in-docker/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/06/02/kafka-cluster-in-docker/" itemprop="url">
-                  使用Docker快速搭建Kafka开发环境
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-02T17:46:22+08:00">
-                2018-06-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Middleware/" itemprop="url" rel="index">
-                    <span itemprop="name">Middleware</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/06/02/kafka-cluster-in-docker/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/06/02/kafka-cluster-in-docker/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>最近准备学习Kafka，于是买了《Kafka权威指南》来看。作为一个初学者，快速搭建起一套可以运行的环境十分重要，跟着该书第2章的安装介绍可以完成在Linux系统下的环境搭建，但是读下来发现步骤还是有点繁多。有没有什么更加快捷的办法搭建一套可以运行的开发环境呢，于是我想到了Docker。2018年了，容器化已经成为了主流，在本地进行开发和测试的时候使用Docker也便于模拟多节点的集群环境。</p>
-<h3 id="0x00-前置条件"><a href="#0x00-前置条件" class="headerlink" title="0x00 前置条件"></a>0x00 前置条件</h3><ul>
-<li><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" target="_blank" rel="noopener">Docker</a>:  要想使用Docker来启动kafka，开发环境提前装好Docker是必须的，我一般在Ubuntu虚拟机上进行开发测试</li>
-<li><a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">Docker Compose</a>: kafka依赖zookeeper，使用docker-compose来管理容器依赖</li>
-</ul>
-<h3 id="0x01-Docker镜像"><a href="#0x01-Docker镜像" class="headerlink" title="0x01 Docker镜像"></a>0x01 Docker镜像</h3><p>要想使用Docker安装Kafka，第一件事当然是去Docker hub上找镜像以及使用方法啦。发现kafka并不像mysql或者redis那样有官方镜像，不过Google一下后发现可以选择知名的三方镜像<a href="https://hub.docker.com/r/wurstmeister/kafka/" target="_blank" rel="noopener">wurstmeister/kafka</a></p>
-<p><a href="https://github.com/wurstmeister/kafka-docker" target="_blank" rel="noopener">wurstmeister/kafka</a>在Github上更新还算频繁，目前使用kafka版本是<code>1.1.0</code></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/06/02/kafka-cluster-in-docker/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2018/05/13/topK-with-PriorityQueue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2018/05/13/topK-with-PriorityQueue/" itemprop="url">
-                  使用 PriorityQueue 求解 Top K 问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-13T14:27:59+08:00">
-                2018-05-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2018/05/13/topK-with-PriorityQueue/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/13/topK-with-PriorityQueue/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="0x00-问题描述"><a href="#0x00-问题描述" class="headerlink" title="0x00 问题描述"></a>0x00 问题描述</h3><p>这两天在看一些面试题的时候，遇到一个问题:</p>
-<blockquote>
-<p>有N(N&gt;&gt;10000)个整数,求出其中的前K个最大的数</p>
-</blockquote>
-<p>在网上搜了下，大概有三种解决思路：</p>
-<ul>
-<li>排序：这种方式最好理解，但是时间复杂度较高(使用快排,O(NlogN))</li>
-<li>堆： 维护一个有边界的小顶堆(O(NlogK))</li>
-<li>位图： 理解较为困难 (O(N))</li>
-</ul>
-<p>自己动手试了试第二种思路在Java中的实现(泛型版本)</p>
-<h3 id="0x01-Java实现"><a href="#0x01-Java实现" class="headerlink" title="0x01 Java实现"></a>0x01 Java实现</h3><p>在 Java 中，PriorityQueue 类实现了堆这种数据结构，可以用来求解Top K 问题。</p>
-<p>整个算法的思想就是： 通过PriorityQueue实现一个有界的堆，逐个向堆中添加元素，当元素个数超过边界时，淘汰堆顶元素</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2018/05/13/topK-with-PriorityQueue/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/2017/07/23/spring-boot-mybatis-docker/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Tomoya Deng">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tomoya's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/blog/2017/07/23/spring-boot-mybatis-docker/" itemprop="url">
-                  spring-boot-mybatis-docker整合使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-23T17:13:17+08:00">
-                2017-07-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/Framework/" itemprop="url" rel="index">
-                    <span itemprop="name">Framework</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/blog/2017/07/23/spring-boot-mybatis-docker/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/07/23/spring-boot-mybatis-docker/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="0x00-前置条件"><a href="#0x00-前置条件" class="headerlink" title="0x00 前置条件"></a>0x00 前置条件</h3><ol>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">Java</a></li>
-<li><a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener">Maven</a></li>
-<li><a href="https://docs.docker.com/engine/installation/" target="_blank" rel="noopener">Docker</a>, <a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">Docker Compose</a></li>
-</ol>
-<h3 id="0x01-使用maven新建Spring-Boot工程"><a href="#0x01-使用maven新建Spring-Boot工程" class="headerlink" title="0x01 使用maven新建Spring Boot工程"></a>0x01 使用maven新建Spring Boot工程</h3><p>按工程根目录的相对路径创建如下文件</p>
-<p><code>pom.xml</code><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.tomoyadeng<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>demo-springboot-docker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2017/07/23/spring-boot-mybatis-docker/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-  </section>
-
-  
-
-
-          </div>
-          
-
-
-          
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
   </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/blog/images/avatar.gif"
-               alt="Tomoya Deng" />
-          <p class="site-author-name" itemprop="name">Tomoya Deng</p>
-           
-              <p class="site-description motion-element" itemprop="description"></p>
-          
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/blog/archives">
-                <span class="site-state-item-count">10</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-categories">
-              <a href="/blog/categories/index.html">
-                <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              <a href="/blog/tags/index.html">
-                <span class="site-state-item-count">7</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-            </div>
-          
-
-        </nav>
-
-        
-
-        <div class="links-of-author motion-element">
-          
-        </div>
-
-        
-        
-
-        
-        
-
-        
-
-
-      </section>
-
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright" >
   
-  &copy; 
-  <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/06/09/consistent-hashing-practice/" class="article-date">
+	  <time datetime="2018-06-09T14:18:17.000Z" itemprop="datePublished">Jun 9</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Java/">Java</a>
   </span>
-  <span class="author" itemprop="copyrightHolder">Tomoya Deng</span>
-</div>
-
-
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
-</div>
-
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
-
-
-        
-
-        
-      </div>
-    </footer>
 
     
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/Java/">Java</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/06/09/consistent-hashing-practice/#comments" class="article-comment-link">Comments</a></span>
     
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-  
-  <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.0"></script>
-
-
-
-  
-  
-
-  
-
-  
-
-
-  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.0"></script>
-
-
-
-  
-
-
-  
-
-    
-      <script id="dsq-count-scr" src="https://tomoya-blog.disqus.com/count.js" async></script>
-    
-
-    
-
-  
-
-
-
-
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.3k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 6(minutes)</span>
 	
 
+  </p>
+</article>
 
-
-
-
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/06/02/kafka-cluster-in-docker/">使用Docker快速搭建Kafka开发环境</a>
+    </h1>
   
 
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <p>最近准备学习Kafka，于是买了《Kafka权威指南》来看。作为一个初学者，快速搭建起一套可以运行的环境十分重要，跟着该书第2章的安装介绍可以完成在Linux系统下的环境搭建，但是读下来发现步骤还是有点繁多。有没有什么更加快捷的办法搭建一套可以运行的开发环境呢，于是我想到了Docker。2018年了，容器化已经成为了主流，在本地进行开发和测试的时候使用Docker也便于模拟多节点的集群环境。</p>
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/06/02/kafka-cluster-in-docker/" class="article-date">
+	  <time datetime="2018-06-02T09:46:22.000Z" itemprop="datePublished">Jun 2</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Middleware/">Middleware</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/docker/">docker</a>, <a class="article-tag-link" href="/blog/tags/kafka/">kafka</a>
+  </span>
 
 
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/06/02/kafka-cluster-in-docker/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 629(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
+	
 
+  </p>
+</article>
 
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/05/13/topK-with-PriorityQueue/">使用 PriorityQueue 求解 Top K 问题</a>
+    </h1>
   
 
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/05/13/topK-with-PriorityQueue/" class="article-date">
+	  <time datetime="2018-05-13T06:27:59.000Z" itemprop="datePublished">May 13</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Java/">Java</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/Java/">Java</a>
+  </span>
 
 
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/05/13/topK-with-PriorityQueue/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 666(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3(minutes)</span>
+	
 
+  </p>
+</article>
 
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2017/07/23/spring-boot-mybatis-docker/">spring-boot-mybatis-docker整合使用</a>
+    </h1>
   
 
-
-
-
-
-
+  </div>
   
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2017/07/23/spring-boot-mybatis-docker/" class="article-date">
+	  <time datetime="2017-07-23T09:13:17.000Z" itemprop="datePublished">Jul 23</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Framework/">Framework</a>
+  </span>
 
-  <script type="text/javascript">
-    // Popup Window;
-    var isfetched = false;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length == 0) {
-      search_path = "search.xml";
-    }
-    var path = "/blog/" + search_path;
-    // monitor main search box;
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/docker/">docker</a>, <a class="article-tag-link" href="/blog/tags/spring-boot/">spring boot</a>
+  </span>
 
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.popup').toggle();
-    }
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-      $.ajax({
-        url: path,
-        dataType: "xml",
-        async: true,
-        success: function( xmlResponse ) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = $( "entry", xmlResponse ).map(function() {
-            return {
-              title: $( "title", this ).text(),
-              content: $("content",this).text(),
-              url: $( "url" , this).text()
-            };
-          }).get();
-          var $input = document.getElementById(search_id);
-          var $resultContent = document.getElementById(content_id);
-          $input.addEventListener('input', function(){
-            var matchcounts = 0;
-            var str='<ul class=\"search-result-list\">';
-            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
-            $resultContent.innerHTML = "";
-            if (this.value.trim().length > 1) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var content_index = [];
-                var data_title = data.title.trim().toLowerCase();
-                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
-                var data_url = decodeURIComponent(data.url);
-                var index_title = -1;
-                var index_content = -1;
-                var first_occur = -1;
-                // only match artiles with not empty titles and contents
-                if(data_title != '') {
-                  keywords.forEach(function(keyword, i) {
-                    index_title = data_title.indexOf(keyword);
-                    index_content = data_content.indexOf(keyword);
-                    if( index_title >= 0 || index_content >= 0 ){
-                      isMatch = true;
-                      if (i == 0) {
-                        first_occur = index_content;
-                      }
-                    }
 
-                  });
-                }
-                // show search results
-                if (isMatch) {
-                  matchcounts += 1;
-                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
-                  var content = data.content.trim().replace(/<[^>]+>/g,"");
-                  if (first_occur >= 0) {
-                    // cut out 100 characters
-                    var start = first_occur - 20;
-                    var end = first_occur + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if(start == 0){
-                      end = 50;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    var match_content = content.substring(start, end);
-                    // highlight all keywords
-                    keywords.forEach(function(keyword){
-                      var regS = new RegExp(keyword, "gi");
-                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
-                    });
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2017/07/23/spring-boot-mybatis-docker/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.5k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 8(minutes)</span>
+	
 
-                    str += "<p class=\"search-result\">" + match_content +"...</p>"
-                  }
-                  str += "</li>";
-                }
-              })};
-            str += "</ul>";
-            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
-            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
-            $resultContent.innerHTML = str;
-          });
-          proceedsearch();
-        }
-      });}
+  </p>
+</article>
 
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched == false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
+    
+  </div>
 
-    $('.popup-btn-close').click(function(e){
-      $('.popup').hide();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    });
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+   
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2018 Tomoya Deng
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/blog/js/plugin.min.js"></script>
+<script src="/blog/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
 
 
 
 
 
-  
+   
 
-  
 
-  
 
-  
+
+
+
+
+
 
 </body>
 </html>
