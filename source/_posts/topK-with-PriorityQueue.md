@@ -5,6 +5,8 @@ tags: Java
 categories: Java
 ---
 
+<!-- more -->
+
 ### 0x00 问题描述
 
 这两天在看一些面试题的时候，遇到一个问题:
@@ -24,8 +26,6 @@ categories: Java
 在 Java 中，PriorityQueue 类实现了堆这种数据结构，可以用来求解Top K 问题。
 
 整个算法的思想就是： 通过PriorityQueue实现一个有界的堆，逐个向堆中添加元素，当元素个数超过边界时，淘汰堆顶元素
-
-<!-- more -->
 
 ```java
 package com.tomoyadeng.javabeginner.interview;

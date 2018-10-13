@@ -9,6 +9,8 @@ date: 2018-09-16 11:52:22
 
 之前已经尝试在Kubernetes中部署了一个简单的Spring boot应用，但这个应用是无状态的，这次主要折腾一下如何运行一个单实例有状态应用(MySQL)
 
+<!-- more -->
+
 ## 0x01 定义持久化磁盘
 
 Kubernetes 中使用 Volume 来持久化保存容器的数据，Volume 的生命周期独立于容器， Pod 中的容器可能频繁的被销毁和重建，但 Volume 会被保留。
@@ -16,8 +18,6 @@ Kubernetes 中使用 Volume 来持久化保存容器的数据，Volume 的生命
 从本质上来将， Kubernetes Volume 是一个目录，但 Volume 提供了对各种backend 的抽象，容器使用 Volume 时不用关心数据到底是存在本地节点的文件系统中还是类似 EBS 这种云硬盘中。
 
 接下来，就通过 [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) 定义一个持久化磁盘：
-
-<!-- more -->
 
 为了方便，使用 hostPath 这种 Volume，这种类型是映射到主机上目录的卷，应该只用于测试目的或者单节点集群。
 

@@ -9,6 +9,8 @@ categories: Cloud Computing
 
 在上一次的日志中，已经在 Kubernetes 中部署了一个单实例的 MySQL，接下来就是创建一个微服务来提供 MySQL 的 REST API， 让其他微服务能够通过 REST API 来访问数据库中的资源。
 
+<!-- more -->
+
 [本项目源码](https://github.com/tomoyadeng/demo-springboot-k8s)
 
 ## 0x01 新建 Spring boot 服务
@@ -23,8 +25,6 @@ compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
 ```
 
 注： `k8s-db` 是 `demo-springboot-k8s` 下的子工程，会继承在父工程引入的一些依赖包和定义的 task。`jaxb-api` 是在使用 JDK 9 以上的 JDK 版本时需要引入的依赖，因为它是 Java EE 里面的 module，在JDK 9 之后便从默认的包里面移除了，需要手动引入。
-
-<!-- more -->
 
 ### 使用 Spring JPA 进行数据访问
 

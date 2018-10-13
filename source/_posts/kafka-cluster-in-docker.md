@@ -9,6 +9,8 @@ date: 2018-06-02 17:46:22
 
 最近准备学习Kafka，于是买了《Kafka权威指南》来看。作为一个初学者，快速搭建起一套可以运行的环境十分重要，跟着该书第2章的安装介绍可以完成在Linux系统下的环境搭建，但是读下来发现步骤还是有点繁多。有没有什么更加快捷的办法搭建一套可以运行的开发环境呢，于是我想到了Docker。2018年了，容器化已经成为了主流，在本地进行开发和测试的时候使用Docker也便于模拟多节点的集群环境。
 
+<!-- more -->
+
 ### 0x00 前置条件
 
 + [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):  要想使用Docker来启动kafka，开发环境提前装好Docker是必须的，我一般在Ubuntu虚拟机上进行开发测试
@@ -19,8 +21,6 @@ date: 2018-06-02 17:46:22
 要想使用Docker安装Kafka，第一件事当然是去Docker hub上找镜像以及使用方法啦。发现kafka并不像mysql或者redis那样有官方镜像，不过Google一下后发现可以选择知名的三方镜像[wurstmeister/kafka](https://hub.docker.com/r/wurstmeister/kafka/)
 
 [wurstmeister/kafka](https://github.com/wurstmeister/kafka-docker)在Github上更新还算频繁，目前使用kafka版本是`1.1.0`
-
-<!-- more -->
 
 ### 0x02 安装
 

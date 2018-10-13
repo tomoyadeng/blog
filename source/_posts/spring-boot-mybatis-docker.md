@@ -7,6 +7,8 @@ tags:
 categories: Framework
 ---
 
+<!-- more -->
+
 ### 0x00 前置条件
 1. [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 2. [Maven](https://maven.apache.org/download.cgi)
@@ -56,8 +58,6 @@ categories: Framework
     </build>
 </project>
 ```
-
-<!-- more -->
 
 `src/main/java/demo/Application.java`
 ```java

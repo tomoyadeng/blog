@@ -7,8 +7,9 @@ categories: Cloud Computing
 date: 2018-09-13 23:22:43
 ---
 
-
 基于容器的微服务架构目前已经成为了开发应用系统的主流，Kubernetes 则是运行微服务应用的理想平台。基于没事儿瞎折腾的态度，自己最近有空闲时间也开始鼓捣起了k8s，经过一步步摸索，终于完成安装和部署。接下来就先分享一下怎么在 kubernetes 中部署一个简单 Spring boot 的应用。
+
+<!-- more -->
 
 ## 0x00 环境准备
 
@@ -37,8 +38,6 @@ public class K8sServiceApplication {
     }
 }
 ```
-
-<!-- more -->
 
 RestController:
 
