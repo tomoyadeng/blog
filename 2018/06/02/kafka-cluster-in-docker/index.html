@@ -17,7 +17,7 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>使用Docker快速搭建Kafka开发环境 | Hexo</title>
+  <title>使用Docker快速搭建Kafka开发环境 | Tomoya&#39;s Blog</title>
   <meta name="description" content="最近准备学习Kafka，于是买了《Kafka权威指南》来看。作为一个初学者，快速搭建起一套可以运行的环境十分重要，跟着该书第2章的安装介绍可以完成在Linux系统下的环境搭建，但是读下来发现步骤还是有点繁多。有没有什么更加快捷的办法搭建一套可以运行的开发环境呢，于是我想到了Docker。2018年了，容器化已经成为了主流，在本地进行开发和测试的时候使用Docker也便于模拟多节点的集群环境。">
 <meta name="keywords" content="kafka,docker">
 <meta property="og:type" content="article">
@@ -365,13 +365,13 @@
  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~/docker/kafka# docker exec -it kafka_kafka_1 /bin/bash</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>创建一个topic并查看，需要指定zookeeper的容器名(这里是kafka_zookeeper_1)，topic的名字为test</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-topics.sh --create --topic test --zookeeper kafka_zookeeper_1:2181 --replication-factor 1 --partitions 1</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-topics.sh --list --zookeeper kafka_zookeeper_1:2181</span><br></pre></td></tr></table></figure>
+ <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-topics.sh --create --topic <span class="built_in">test</span> --zookeeper kafka_zookeeper_1:2181 --replication-factor 1 --partitions 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-topics.sh --list --zookeeper kafka_zookeeper_1:2181</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>发布消息，输入几条消息后，按^C退出发布</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-console-producer.sh --topic=test --broker-list kafka_kafka_1:9092</span><br></pre></td></tr></table></figure>
+ <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-console-producer.sh --topic=<span class="built_in">test</span> --broker-list kafka_kafka_1:9092</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>接受消息</p>
- <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server kafka_kafka_1:9092 --from-beginning --topic test</span><br></pre></td></tr></table></figure>
+ <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server kafka_kafka_1:9092 --from-beginning --topic <span class="built_in">test</span></span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>如果接收到了发布的消息，那么说明部署正常，可以正式使用了。</p>
@@ -471,13 +471,14 @@
 
     <div class="copyright">
     	
-        &copy; 2018 Tomoya Deng
+        &copy; 2017 - 2018 Tomoya Deng
         
-        <div class="publishby">
+        <!-- <div class="publishby">
         	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
-        </div>
+        </div> -->
     </div>
 </footer>
+
   <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 <script>
 window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')

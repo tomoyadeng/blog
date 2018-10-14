@@ -17,7 +17,7 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>一致性哈希算法的一次实践 | Hexo</title>
+  <title>一致性哈希算法的一次实践 | Tomoya&#39;s Blog</title>
   <meta name="description" content="最近在分析一个需求，需要开发一个采集器的调度框架，实现采集器的注册，离线以及采集任务分配(负载均衡)。 采集器用于登录到网络设备上采集数据，部分运营商考虑到设备性能问题，会限制同时只能有一个用户登录设备查询数据。那么在此限制下，分配采集任务时需要保证：  对于同一设备的任务始终都落在同一个采集器上去执行，才能保证同一时刻对于同一设备不会有多个采集器采集。 而且，需要保证在某个采集器失效离线时，之前">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
@@ -453,13 +453,14 @@
 
     <div class="copyright">
     	
-        &copy; 2018 Tomoya Deng
+        &copy; 2017 - 2018 Tomoya Deng
         
-        <div class="publishby">
+        <!-- <div class="publishby">
         	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
-        </div>
+        </div> -->
     </div>
 </footer>
+
   <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 <script>
 window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
