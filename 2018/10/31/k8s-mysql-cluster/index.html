@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>K8s上部署MySQL主从 | Tomoya&#39;s Blog</title>
+  <meta name="description" content="K8s实验环境从minikube升级到单主多节点的集群后，接下来就准备把单实例的MySQL升级为MySQL主从架构。本文就介绍下怎么在K8s集群中部署MySQL主从，数据持久化采用nfs。">
+<meta name="keywords" content="kubernetes,mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8s上部署MySQL主从">
+<meta property="og:url" content="https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/index.html">
+<meta property="og:site_name" content="Tomoya&#39;s Blog">
+<meta property="og:description" content="K8s实验环境从minikube升级到单主多节点的集群后，接下来就准备把单实例的MySQL升级为MySQL主从架构。本文就介绍下怎么在K8s集群中部署MySQL主从，数据持久化采用nfs。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/master-1.png">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/replica-1.png">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/status.png">
+<meta property="og:updated_time" content="2018-10-31T13:19:37.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="K8s上部署MySQL主从">
+<meta name="twitter:description" content="K8s实验环境从minikube升级到单主多节点的集群后，接下来就准备把单实例的MySQL升级为MySQL主从架构。本文就介绍下怎么在K8s集群中部署MySQL主从，数据持久化采用nfs。">
+<meta name="twitter:image" content="https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/master-1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Tomoya&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/tomoyadeng" target="_blank">
+          <img class="img-circle img-rotate" src="/blog/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Tomoya Deng</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/blog/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Framework/">Framework</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java/">Java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Middleware/">Middleware</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kafka/">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kubernetes/">kubernetes</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/mysql/">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring-boot/">spring boot</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/blog/tags/Java/" style="font-size: 13.67px;">Java</a> <a href="/blog/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/blog/tags/kafka/" style="font-size: 13px;">kafka</a> <a href="/blog/tags/kubernetes/" style="font-size: 14px;">kubernetes</a> <a href="/blog/tags/mysql/" style="font-size: 13.67px;">mysql</a> <a href="/blog/tags/spring/" style="font-size: 13px;">spring</a> <a href="/blog/tags/spring-boot/" style="font-size: 13.33px;">spring boot</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/09/">September 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/31/k8s-mysql-cluster/" class="title">K8s上部署MySQL主从</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-31T11:34:59.000Z" itemprop="datePublished">2018-10-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/12/k8s-in-ubuntu18.04/" class="title">K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-12T12:13:48.000Z" itemprop="datePublished">2018-10-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/07/simplify-code-with-stream-api/" class="title">使用 Stream API 简化代码</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-07T13:11:07.000Z" itemprop="datePublished">2018-10-07</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Framework/">Framework</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/09/24/logging-with-aop-and-annotation/" class="title">使用Spring AOP &amp; 自定义注解 记录日志</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-09-24T04:04:16.000Z" itemprop="datePublished">2018-09-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/09/23/springboot-k8s-3/" class="title">K8s折腾日记(三)--为MySQL提供REST API</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-09-23T03:10:13.000Z" itemprop="datePublished">2018-09-23</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-k8s-mysql-cluster" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      K8s上部署MySQL主从
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/10/31/k8s-mysql-cluster/" class="article-date">
+	  <time datetime="2018-10-31T11:34:59.000Z" itemprop="datePublished">2018-10-31</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/kubernetes/">kubernetes</a>, <a class="article-tag-link" href="/blog/tags/mysql/">mysql</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/10/31/k8s-mysql-cluster/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.2k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 6(minutes)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>K8s实验环境从minikube升级到单主多节点的集群后，接下来就准备把单实例的MySQL升级为MySQL主从架构。本文就介绍下怎么在K8s集群中部署MySQL主从，数据持久化采用nfs。</p>
+<a id="more"></a>
+<h2 id="0x01-搭建-NFS-服务器"><a href="#0x01-搭建-NFS-服务器" class="headerlink" title="0x01 搭建 NFS 服务器"></a>0x01 搭建 NFS 服务器</h2><p>参考 <a href="https://linuxconfig.org/how-to-configure-a-nfs-file-server-on-ubuntu-18-04-bionic-beaver" target="_blank" rel="noopener">https://linuxconfig.org/how-to-configure-a-nfs-file-server-on-ubuntu-18-04-bionic-beaver</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install nfs-kernel-server</span><br></pre></td></tr></table></figure>
+<p>编辑 <code>/etc/exports</code></p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/nfs		*(rw,sync,no_subtree_check,no_root_squash)</span><br></pre></td></tr></table></figure>
+<p>重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nfs-kernel-server</span><br></pre></td></tr></table></figure>
+<p>创建目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /nfs/mysql/data/master</span><br><span class="line">mkdir -p /nfs/mysql/data/replica</span><br></pre></td></tr></table></figure>
+<h2 id="0x02-准备-MySQL-主从镜像"><a href="#0x02-准备-MySQL-主从镜像" class="headerlink" title="0x02 准备 MySQL 主从镜像"></a>0x02 准备 MySQL 主从镜像</h2><p>我们可以通过对MySQL官方的Dockerfile进行修改，然后构建生成主从镜像，首先把官方镜像克隆下来</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/docker-library/mysql.git</span><br></pre></td></tr></table></figure>
+<p>当然也可以直接把 <code>Dockerfile</code> 和 <code>docker-entrypoint.sh</code> 下载到本地(这里选择MySQL 5.7 版本)</p>
+<p><a href="https://github.com/docker-library/mysql/tree/master/5.7" target="_blank" rel="noopener">https://github.com/docker-library/mysql/tree/master/5.7</a></p>
+<h3 id="修改-master-Dockerfile"><a href="#修改-master-Dockerfile" class="headerlink" title="修改 master Dockerfile"></a>修改 master Dockerfile</h3><ol>
+<li><p>将 <code>Dockerfile</code> 和 <code>docker-entrypoint.sh</code> 拷贝一份到一个新的目录，用于构建 master 镜像。</p>
+</li>
+<li><p>在 <code>Dockerfile</code> 中 <code>VOLUME /var/lib/mysql</code> 这一行前面加一行。这一行的作用是将mysql master的server-id设置为1。</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN sed -i <span class="string">'/\[mysqld\]/a server-id=1\nlog-bin'</span> /etc/mysql/mysql.conf.d/mysqld.cnf</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>在docker-entrypoint.sh中添加如下内容，创建一个复制用户并赋权限，刷新系统权限表</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"CREATE USER '<span class="variable">$MYSQL_REPLICATION_USER</span>'@'%' IDENTIFIED BY '<span class="variable">$MYSQL_REPLICATION_PASSWORD</span>' ;"</span> | <span class="string">"<span class="variable">$&#123;mysql[@]&#125;</span>"</span> </span><br><span class="line"><span class="built_in">echo</span> <span class="string">"GRANT REPLICATION SLAVE ON *.* TO '<span class="variable">$MYSQL_REPLICATION_USER</span>'@'%' IDENTIFIED BY '<span class="variable">$MYSQL_REPLICATION_PASSWORD</span>' ;"</span> | <span class="string">"<span class="variable">$&#123;mysql[@]&#125;</span>"</span> </span><br><span class="line"><span class="built_in">echo</span> <span class="string">'FLUSH PRIVILEGES ;'</span> | <span class="string">"<span class="variable">$&#123;mysql[@]&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<img src="/blog/2018/10/31/k8s-mysql-cluster/master-1.png">
+<h3 id="修改-replica-Dockerfile"><a href="#修改-replica-Dockerfile" class="headerlink" title="修改 replica Dockerfile"></a>修改 replica Dockerfile</h3><ol>
+<li><p>将 <code>Dockerfile</code> 和 <code>docker-entrypoint.sh</code> 拷贝一份到一个新的目录，用于构建 replica 镜像。</p>
+</li>
+<li><p>在 <code>Dockerfile</code> 中 <code>VOLUME /var/lib/mysql</code> 这一行前面添加如下内容，将mysql replica的server-id设置为一个随机数:</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN RAND=<span class="string">"<span class="variable">$(date +%s | rev | cut -c 1-2)</span><span class="variable">$(echo $&#123;RANDOM&#125;)</span>"</span> &amp;&amp; sed -i <span class="string">'/\[mysqld\]/a server-id='</span><span class="variable">$RAND</span><span class="string">'\nlog-bin'</span> /etc/mysql/mysql.conf.d/mysqld.cnf</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>在docker-entrypoint.sh中添加如下内容，配置连接master主机的host、user、password等参数，并启动复制进程。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"STOP SLAVE;"</span> | <span class="string">"<span class="variable">$&#123;mysql[@]&#125;</span>"</span> </span><br><span class="line"><span class="built_in">echo</span> <span class="string">"CHANGE MASTER TO master_host='<span class="variable">$MYSQL_MASTER_SERVICE_HOST</span>', master_user='<span class="variable">$MYSQL_REPLICATION_USER</span>', master_password='<span class="variable">$MYSQL_REPLICATION_PASSWORD</span>' ;"</span> | <span class="string">"<span class="variable">$&#123;mysql[@]&#125;</span>"</span> </span><br><span class="line"><span class="built_in">echo</span> <span class="string">"START SLAVE;"</span> | <span class="string">"<span class="variable">$&#123;mysql[@]&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<img src="/blog/2018/10/31/k8s-mysql-cluster/replica-1.png">
+<h3 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/dockerfile/mysql/master/</span><br><span class="line">docker build -t tomoyadeng/mysql-master:5.7.1</span><br><span class="line">docker push tomoyadeng/mysql-master:5.7.1</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> ~/dockerfile/mysql/replica01</span><br><span class="line">docker build -t tomoyadeng/mysql-replica:5.7.1</span><br><span class="line">docker push tomoyadeng/mysql-replica:5.7.1</span><br></pre></td></tr></table></figure>
+<p>构建的时候可能会出错，重试几次就好了，<a href="https://github.com/docker-library/official-images/issues/4252#issuecomment-381783035" target="_blank" rel="noopener">docker-library/official-images#4252 (comment)</a></p>
+<p>也可以选择直接使用我构建好的镜像</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull tomoyadeng/mysql-master:5.7.1</span><br><span class="line">docker pull tomoyadeng/mysql-replica:5.7.1</span><br></pre></td></tr></table></figure>
+<h2 id="0x03-创建-Secret"><a href="#0x03-创建-Secret" class="headerlink" title="0x03 创建 Secret"></a>0x03 创建 Secret</h2><p>新建 <code>mysql-secret.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-pass</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">Opaque</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line"><span class="attr">  rootuser:</span> <span class="string">cm9vdA==</span></span><br><span class="line"><span class="attr">  rootpwd:</span> <span class="string">MTIzNDU2</span></span><br><span class="line"><span class="attr">  repluser:</span> <span class="string">cmVwbA==</span></span><br><span class="line"><span class="attr">  replpwd:</span> <span class="string">MTIzNDU2</span></span><br></pre></td></tr></table></figure>
+<p>创建 Secret</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f mysql-secret.yaml</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-创建-PV"><a href="#0x04-创建-PV" class="headerlink" title="0x04 创建 PV"></a>0x04 创建 PV</h2><p>新建 <code>master-pv.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">master-pv</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  capacity:</span></span><br><span class="line"><span class="attr">    storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  volumeMode:</span> <span class="string">Filesystem</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteOnce</span></span><br><span class="line"><span class="attr">  persistentVolumeReclaimPolicy:</span> <span class="string">Recycle</span></span><br><span class="line"><span class="attr">  storageClassName:</span> <span class="string">master</span></span><br><span class="line"><span class="attr">  mountOptions:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">hard</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">nfsvers=4.1</span></span><br><span class="line"><span class="attr">  nfs:</span></span><br><span class="line"><span class="attr">    path:</span> <span class="string">/nfs/mysql/data/master</span></span><br><span class="line"><span class="attr">    server:</span> <span class="number">192.168</span><span class="number">.99</span><span class="number">.103</span></span><br></pre></td></tr></table></figure>
+<p>随后通过<code>kubectl create -f master-pv.yaml</code> 创建 master pv</p>
+<p>新建 <code>replica-pv.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">replica-pv</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  capacity:</span></span><br><span class="line"><span class="attr">    storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  volumeMode:</span> <span class="string">Filesystem</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteOnce</span></span><br><span class="line"><span class="attr">  persistentVolumeReclaimPolicy:</span> <span class="string">Recycle</span></span><br><span class="line"><span class="attr">  storageClassName:</span> <span class="string">replica</span></span><br><span class="line"><span class="attr">  mountOptions:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">hard</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">nfsvers=4.1</span></span><br><span class="line"><span class="attr">  nfs:</span></span><br><span class="line"><span class="attr">    path:</span> <span class="string">/nfs/mysql/data/replica</span></span><br><span class="line"><span class="attr">    server:</span> <span class="number">192.168</span><span class="number">.99</span><span class="number">.103</span></span><br></pre></td></tr></table></figure>
+<p>随后通过<code>kubectl create -f replica-pv.yaml</code> 创建 replica pv</p>
+<h2 id="0x05-部署-master"><a href="#0x05-部署-master" class="headerlink" title="0x05 部署 master"></a>0x05 部署 master</h2><p>新建 <code>mysql-master-deployment.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - port:</span> <span class="number">3306</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">3306</span></span><br><span class="line"><span class="attr">    protocol:</span> <span class="string">TCP</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-master-pvc</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteOnce</span></span><br><span class="line"><span class="attr">  resources:</span></span><br><span class="line"><span class="attr">    requests:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  storageClassName:</span> <span class="string">master</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="attr">  strategy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">Recreate</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - image:</span> <span class="string">tomoyadeng/mysql-master:5.7.1</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">mysql</span></span><br><span class="line"><span class="attr">        env:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MYSQL_ROOT_PASSWORD</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysql-pass</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">rootpwd</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MYSQL_REPLICATION_USER</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysql-pass</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">repluser</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MYSQL_REPLICAITON_PASSWORD</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysql-pass</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">replpwd</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">3306</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">mysql</span></span><br><span class="line"><span class="attr">        volumeMounts:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">mysql-persistent-storage</span></span><br><span class="line"><span class="attr">          mountPath:</span> <span class="string">/var/lib/mysql</span></span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">mysql-persistent-storage</span></span><br><span class="line"><span class="attr">        persistentVolumeClaim:</span></span><br><span class="line"><span class="attr">          claimName:</span> <span class="string">mysql-master-pvc</span></span><br></pre></td></tr></table></figure>
+<p>上面的yaml文件包含了创建 master的 PVC，Deployment 和 Service，直接通过 <code>kubectl create -f mysql-master-deployment.yaml</code> 进行部署。</p>
+<p>部署完成后，可以通过 <code>kubectl get svc | grep master</code> 查看刚才部署的 Service，然后可以通过运行MySQL客户端以连接到服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@k8s-master001:~/k8s/mysql-cluster<span class="comment"># kubectl run -it --rm --image=mysql:5.7 mysql-client -- mysql -h 10.97.247.244 -p123456</span></span><br><span class="line"></span><br><span class="line">kubectl run --generator=deployment/apps.v1beta1 is DEPRECATED and will be removed <span class="keyword">in</span> a future version. Use kubectl create instead.</span><br><span class="line">If you don<span class="string">'t see a command prompt, try pressing enter.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">mysql&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里的ip是通过 <code>kubectl get svc</code> 查到的 CLUSTER-IP</p>
+<h2 id="0x06-部署-replica"><a href="#0x06-部署-replica" class="headerlink" title="0x06 部署 replica"></a>0x06 部署 replica</h2><p>新建 <code>mysql-replica-deployment.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-replica</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">mysql-replica</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - port:</span> <span class="number">3306</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">3306</span></span><br><span class="line"><span class="attr">    protocol:</span> <span class="string">TCP</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">mysql-replica</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-replica-pvc</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteOnce</span></span><br><span class="line"><span class="attr">  resources:</span></span><br><span class="line"><span class="attr">    requests:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  storageClassName:</span> <span class="string">replica</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysql-replica</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">mysql-replica</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">mysql-replica</span></span><br><span class="line"><span class="attr">  strategy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">Recreate</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">mysql-replica</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - image:</span> <span class="string">tomoyadeng/mysql-replica:5.7.1</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">mysql</span></span><br><span class="line"><span class="attr">        env:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MYSQL_MASTER_SERVICE_HOST</span></span><br><span class="line"><span class="attr">          value:</span> <span class="string">mysql-master</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MYSQL_ROOT_PASSWORD</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysql-pass</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">rootpwd</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MYSQL_REPLICATION_USER</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysql-pass</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">repluser</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MYSQL_REPLICAITON_PASSWORD</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysql-pass</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">replpwd</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">3306</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">mysql</span></span><br><span class="line"><span class="attr">        volumeMounts:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">mysql-replica-storage</span></span><br><span class="line"><span class="attr">          mountPath:</span> <span class="string">/var/lib/mysql</span></span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">mysql-replica-storage</span></span><br><span class="line"><span class="attr">        persistentVolumeClaim:</span></span><br><span class="line"><span class="attr">          claimName:</span> <span class="string">mysql-replica-pvc</span></span><br></pre></td></tr></table></figure>
+<p>这里的 <code>MYSQL_MASTER_SERVICE_HOST</code> 环境变量配置的就是之前master svc的名称。随后，直接使用 <code>kubectl create -f mysql-replica-deployment.yaml</code> 进行部署。过一会儿，可以通过运行客户端连接 replica，查看备份状态</p>
+<img src="/blog/2018/10/31/k8s-mysql-cluster/status.png">
+<h2 id="0x07-总结"><a href="#0x07-总结" class="headerlink" title="0x07 总结"></a>0x07 总结</h2><p>至此，MySQL主从就搭建好了，工程源文件见 <a href="https://github.com/tomoyadeng/demo-springboot-k8s/tree/master/mysql-cluster" target="_blank" rel="noopener">https://github.com/tomoyadeng/demo-springboot-k8s/tree/master/mysql-cluster</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/" title="K8s上部署MySQL主从" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/tomoyadeng" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/blog/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/tomoyadeng" target="_blank"><span class="text-dark">Tomoya Deng</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/blog/2018/10/12/k8s-in-ubuntu18.04/" title="K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2017 - 2018 Tomoya Deng
+        
+        <!-- <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div> -->
+    </div>
+</footer>
+
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/blog/js/plugin.min.js"></script>
+<script src="/blog/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://tomoyadeng.github.io/blog/2018/10/31/k8s-mysql-cluster/';
+        
+        this.page.identifier = 'k8s-mysql-cluster';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'tomoya-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
