@@ -17,21 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>使用 PriorityQueue 求解 Top K 问题 | Tomoya&#39;s Blog</title>
-  <meta name="description" content="0x00 问题描述这两天在看一些面试题的时候，遇到一个问题:  有N(N&amp;gt;&amp;gt;10000)个整数,求出其中的前K个最大的数  在网上搜了下，大概有三种解决思路：  排序：这种方式最好理解，但是时间复杂度较高(使用快排,O(NlogN)) 堆： 维护一个有边界的小顶堆(O(NlogK)) 位图： 理解较为困难 (O(N))  自己动手试了试第二种思路在Java中的实现(泛型版本) 0x0">
-<meta name="keywords" content="Java">
+  <title>构建 gitbook 的 docker 镜像 | Tomoya&#39;s Blog</title>
+  <meta name="description" content="最近由于更换了VPS服务器，需要把原来老的服务器上发布的 gitbook 迁移到新的服务器上来。在新的服务器上重新安装 gitbook 的时候，遇到了各种恼人的npm/node版本的问题，遂决定构建一个 gitbook 的 docker 镜像，来避免后续在 gitbook 环境和版本问题上浪费时间。">
+<meta name="keywords" content="docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用 PriorityQueue 求解 Top K 问题">
-<meta property="og:url" content="https://tomoyadeng.github.io/blog/2018/05/13/topK-with-PriorityQueue/index.html">
+<meta property="og:title" content="构建 gitbook 的 docker 镜像">
+<meta property="og:url" content="https://tomoyadeng.github.io/blog/2018/12/08/build-docker-image-for-gitbook/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
-<meta property="og:description" content="0x00 问题描述这两天在看一些面试题的时候，遇到一个问题:  有N(N&amp;gt;&amp;gt;10000)个整数,求出其中的前K个最大的数  在网上搜了下，大概有三种解决思路：  排序：这种方式最好理解，但是时间复杂度较高(使用快排,O(NlogN)) 堆： 维护一个有边界的小顶堆(O(NlogK)) 位图： 理解较为困难 (O(N))  自己动手试了试第二种思路在Java中的实现(泛型版本) 0x0">
+<meta property="og:description" content="最近由于更换了VPS服务器，需要把原来老的服务器上发布的 gitbook 迁移到新的服务器上来。在新的服务器上重新安装 gitbook 的时候，遇到了各种恼人的npm/node版本的问题，遂决定构建一个 gitbook 的 docker 镜像，来避免后续在 gitbook 环境和版本问题上浪费时间。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-12T16:10:53.581Z">
+<meta property="og:updated_time" content="2018-12-08T16:16:36.976Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用 PriorityQueue 求解 Top K 问题">
-<meta name="twitter:description" content="0x00 问题描述这两天在看一些面试题的时候，遇到一个问题:  有N(N&amp;gt;&amp;gt;10000)个整数,求出其中的前K个最大的数  在网上搜了下，大概有三种解决思路：  排序：这种方式最好理解，但是时间复杂度较高(使用快排,O(NlogN)) 堆： 维护一个有边界的小顶堆(O(NlogK)) 位图： 理解较为困难 (O(N))  自己动手试了试第二种思路在Java中的实现(泛型版本) 0x0">
+<meta name="twitter:title" content="构建 gitbook 的 docker 镜像">
+<meta name="twitter:description" content="最近由于更换了VPS服务器，需要把原来老的服务器上发布的 gitbook 迁移到新的服务器上来。在新的服务器上重新安装 gitbook 的时候，遇到了各种恼人的npm/node版本的问题，遂决定构建一个 gitbook 的 docker 镜像，来避免后续在 gitbook 环境和版本问题上浪费时间。">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://tomoyadeng.github.io/blog/2018/05/13/topK-with-PriorityQueue/index.html">
+  <link rel="canonical" href="https://tomoyadeng.github.io/blog/2018/12/08/build-docker-image-for-gitbook/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Tomoya&#39;s Blog" type="application/atom+xml">
   
@@ -290,14 +290,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-topK-with-PriorityQueue" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-build-docker-image-for-gitbook" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      使用 PriorityQueue 求解 Top K 问题
+      构建 gitbook 的 docker 镜像
     </h1>
   
 
@@ -305,60 +305,64 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/blog/2018/05/13/topK-with-PriorityQueue/" class="article-date">
-	  <time datetime="2018-05-13T06:27:59.000Z" itemprop="datePublished">2018-05-13</time>
+	<a href="/blog/2018/12/08/build-docker-image-for-gitbook/" class="article-date">
+	  <time datetime="2018-12-08T15:46:32.000Z" itemprop="datePublished">2018-12-08</time>
 	</a>
 </span>
         
   <span class="article-category">
     <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/blog/categories/Java/">Java</a>
+    <a class="article-category-link" href="/blog/categories/Tools/">Tools</a>
   </span>
 
         
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/blog/tags/Java/">Java</a>
+	<a class="article-tag-link" href="/blog/tags/docker/">docker</a>
   </span>
 
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/05/13/topK-with-PriorityQueue/#comments" class="article-comment-link">Comments</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/12/08/build-docker-image-for-gitbook/#comments" class="article-comment-link">Comments</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 666(words)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 352(words)</span>
 	
 	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3(minutes)</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
 	
 
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><a id="more"></a>
-<h3 id="0x00-问题描述"><a href="#0x00-问题描述" class="headerlink" title="0x00 问题描述"></a>0x00 问题描述</h3><p>这两天在看一些面试题的时候，遇到一个问题:</p>
-<blockquote>
-<p>有N(N&gt;&gt;10000)个整数,求出其中的前K个最大的数</p>
-</blockquote>
-<p>在网上搜了下，大概有三种解决思路：</p>
-<ul>
-<li>排序：这种方式最好理解，但是时间复杂度较高(使用快排,O(NlogN))</li>
-<li>堆： 维护一个有边界的小顶堆(O(NlogK))</li>
-<li>位图： 理解较为困难 (O(N))</li>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>最近由于更换了VPS服务器，需要把原来老的服务器上发布的 gitbook 迁移到新的服务器上来。在新的服务器上重新安装 gitbook 的时候，遇到了各种恼人的npm/node版本的问题，遂决定构建一个 gitbook 的 docker 镜像，来避免后续在 gitbook 环境和版本问题上浪费时间。</p>
+<a id="more"></a>
+<h2 id="0x00-构建-gitbook-的-docker-镜像"><a href="#0x00-构建-gitbook-的-docker-镜像" class="headerlink" title="0x00 构建 gitbook 的 docker 镜像"></a>0x00 构建 gitbook 的 docker 镜像</h2><p>构建一个docker镜像十分简单，总共就三步：</p>
+<ol>
+<li>编写 Dockerfile</li>
+<li>build</li>
+<li>push 到 docker hub</li>
+</ol>
+<h3 id="编写-Dockerfile"><a href="#编写-Dockerfile" class="headerlink" title="编写 Dockerfile"></a>编写 Dockerfile</h3><p>gitbook 的依赖很简单，使用 <code>node</code> 作为基础镜像，使用 npm 安装<code>gitbook-cli</code> 就行：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:<span class="number">8.5</span>-alpine</span><br><span class="line"><span class="keyword">MAINTAINER</span> Tomoya &lt;tomoyadeng@gmail.com&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> npm install gitbook-cli -g</span><br><span class="line"></span><br><span class="line">ARG GITBOOK_VERSION=3.2.3</span><br><span class="line">RUN gitbook fetch $GITBOOK_VERSION</span><br><span class="line"></span><br><span class="line">ENV BOOKDIR /gitbook</span><br><span class="line"></span><br><span class="line">VOLUME $BOOKDIR</span><br><span class="line"></span><br><span class="line">EXPOSE 4000</span><br><span class="line"></span><br><span class="line">WORKDIR $BOOKDIR</span><br><span class="line"></span><br><span class="line">CMD ["gitbook", "--help"]</span><br></pre></td></tr></table></figure>
+<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>写好 Dockerfile 后， 直接运行 docker 命令行构建</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build . -t tomoyadeng/gitbook:latest</span><br></pre></td></tr></table></figure>
+<p>这里直接构建的镜像打上了<code>tomoyadeng/gitbook:latest</code>的标签，<a href="https://hub.docker.com/r/tomoyadeng/" target="_blank" rel="noopener">tomoyadeng</a> 是我在<a href="https://hub.docker.com/" target="_blank" rel="noopener">Docker Hub</a> 上注册好了的命名空间</p>
+<h3 id="push"><a href="#push" class="headerlink" title="push"></a>push</h3><p>随后可以将构建好的镜像推送到 Docker Hub</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker login</span><br><span class="line"></span><br><span class="line">docker push tomoyadeng/gitbook:latest</span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -v &quot;$PWD:/gitbook&quot; -p 4000:4000 tomoyadeng/gitbook gitbook &lt;command&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="Frequently-used-gitbook-commands"><a href="#Frequently-used-gitbook-commands" class="headerlink" title="Frequently used gitbook commands"></a>Frequently used gitbook commands</h4><p><strong>install</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -v &quot;$PWD:/gitbook&quot; -p 4000:4000 tomoyadeng/gitbook gitbook install</span><br></pre></td></tr></table></figure>
+<p><strong>build</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -v &quot;$PWD:/gitbook&quot; -p 4000:4000 tomoyadeng/gitbook gitbook build</span><br></pre></td></tr></table></figure>
+<p><strong>serve</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -v &quot;$PWD:/gitbook&quot; -p 4000:4000 tomoyadeng/gitbook gitbook serve</span><br></pre></td></tr></table></figure>
+<p>more commands or details please refer to <a href="https://github.com/GitbookIO/gitbook-cli" target="_blank" rel="noopener">gitbook-cli</a></p>
+<h2 id="0x01-参考资料"><a href="#0x01-参考资料" class="headerlink" title="0x01 参考资料"></a>0x01 参考资料</h2><ul>
+<li><a href="https://github.com/GitbookIO/gitbook-cli" target="_blank" rel="noopener">gitbook-cli</a></li>
 </ul>
-<p>自己动手试了试第二种思路在Java中的实现(泛型版本)</p>
-<h3 id="0x01-Java实现"><a href="#0x01-Java实现" class="headerlink" title="0x01 Java实现"></a>0x01 Java实现</h3><p>在 Java 中，PriorityQueue 类实现了堆这种数据结构，可以用来求解Top K 问题。</p>
-<p>整个算法的思想就是： 通过PriorityQueue实现一个有界的堆，逐个向堆中添加元素，当元素个数超过边界时，淘汰堆顶元素</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tomoyadeng.javabeginner.interview;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">import</span> java.util.stream.Stream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TopK</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 堆的边界，Top K 问题中的 K</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> boundary;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 优先队列，用来构造一个有界的堆</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PriorityQueue&lt;T&gt; boundaryHeap;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通过自定义边界 boundary 可以求解 top K 问题</span></span><br><span class="line"><span class="comment">     * 通过自定义比较器 comparator 可以控制求解 top K 大 还是 top K 小</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> boundary 边界 K</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> comparator 数据比较器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TopK</span><span class="params">(<span class="keyword">int</span> boundary, Comparator&lt;T&gt; comparator)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.boundary = boundary;</span><br><span class="line">        boundaryHeap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(boundary, comparator);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 求解数据流中的top K， 将结果写入List中</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> dataStream 数据流</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> results top K 结果</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topK</span><span class="params">(Stream&lt;T&gt; dataStream, List&lt;T&gt; results)</span> </span>&#123;</span><br><span class="line">        dataStream.forEach(<span class="keyword">this</span>::add);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!boundaryHeap.isEmpty()) &#123;</span><br><span class="line">            results.add(boundaryHeap.poll());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 向有界堆中添加元素的帮助方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> t 待添加数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        boundaryHeap.add(t);</span><br><span class="line">        <span class="keyword">if</span> (boundaryHeap.size() &gt; boundary) &#123;</span><br><span class="line">            boundaryHeap.poll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="0x02-测试"><a href="#0x02-测试" class="headerlink" title="0x02 测试"></a>0x02 测试</h3><p>直接写一个main函数进行测试</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 构造一个 范围为 [0, 2^30] 的 Integer 流，通过limit可以控制大小</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> upLimit = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    Stream&lt;Integer&gt; stream = Stream.generate(Math::random)</span><br><span class="line">            .map(d -&gt; d * upLimit)</span><br><span class="line">            .map(d -&gt; (<span class="keyword">int</span>) Math.round(d))</span><br><span class="line">            .limit(<span class="number">100_000_000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 (o1, o2) -&gt; (o1 - o2) 换成 (o1, o2) -&gt; (o2 - o1) 可以求解 top K 小</span></span><br><span class="line">    TopK&lt;Integer&gt; topK = <span class="keyword">new</span> TopK&lt;&gt;(<span class="number">10</span>, (o1, o2) -&gt; (o1 - o2));</span><br><span class="line"></span><br><span class="line">    List&lt;Integer&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">    topK.topK(stream, results);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> endTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">"results: "</span> + results);</span><br><span class="line">    System.out.println(<span class="string">"cost: "</span> + (endTime - startTime) / <span class="number">1000.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>1亿数据测试结果：</p>
-<blockquote>
-<p>results: [1073741717, 1073741721, 1073741740, 1073741747, 1073741768, 1073741781, 1073741785, 1073741791, 1073741792, 1073741813]<br>cost: 7.656</p>
-</blockquote>
-<h3 id="0x03-优点分析"><a href="#0x03-优点分析" class="headerlink" title="0x03 优点分析"></a>0x03 优点分析</h3><p>在输入数据流是一个惰性流(不需要一次性将全部数据加载到内存)的情况下，这种方式速度较快且占用最少的内存，内存中只需要维护一个固定大小的堆即可</p>
 
       
     </div>
@@ -368,7 +372,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://tomoyadeng.github.io/blog/2018/05/13/topK-with-PriorityQueue/" title="使用 PriorityQueue 求解 Top K 问题" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2018/05/13/topK-with-PriorityQueue/</a>
+      <a href="https://tomoyadeng.github.io/blog/2018/12/08/build-docker-image-for-gitbook/" title="构建 gitbook 的 docker 镜像" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2018/12/08/build-docker-image-for-gitbook/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -416,13 +420,9 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/blog/2018/06/02/kafka-cluster-in-docker/" title="使用Docker快速搭建Kafka开发环境"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/blog/2017/07/23/spring-boot-mybatis-docker/" title="spring-boot-mybatis-docker整合使用"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/blog/2018/10/31/k8s-mysql-cluster/" title="K8s上部署MySQL主从"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
@@ -502,9 +502,9 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
     <script defer>
     var disqus_config = function () {
         
-            this.page.url = 'https://tomoyadeng.github.io/blog/2018/05/13/topK-with-PriorityQueue/';
+            this.page.url = 'https://tomoyadeng.github.io/blog/2018/12/08/build-docker-image-for-gitbook/';
         
-        this.page.identifier = 'topK-with-PriorityQueue';
+        this.page.identifier = 'build-docker-image-for-gitbook';
     };
     (function() { 
         var d = document, s = d.createElement('script');  
