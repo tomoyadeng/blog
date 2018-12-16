@@ -66,9 +66,9 @@ public class EndPoint {
 
 ## 0x02 序列化/反序列化 & Netty编码/解码
 
-RPC要把一次本地方法调用变成能够被网络传输的字节流，那么就需要考虑序列化的对象以及序列化协议。
+RPC要把一次本地方法调用变成能够被网络传输的字节流，那么就需要考虑要进行序列化的对象是什么以及采用哪种序列化协议。
 
-首先定义方法的调用和返回两个对象实体：
+一次方法调用涉及到的对象实体就两个：请求和响应
 
 ```java
 @Data
@@ -94,7 +94,9 @@ public class TRpcResponse {
 }
 ```
 
-确定了需要序列化的对象实体，就要确定序列化的协议，并实现序列化和反序列化方法。一般高级的RPC框架都会抽象出序列化器/反序列化器的接口，并提供不同的实现供使用者选择。简单起见，我这儿直接写一个静态类来实现protobuf的序列化和反序列化。
+确定了需要序列化的对象实体，接下来就是确定序列化的协议，并实现序列化和反序列化方法。
+
+高级的RPC框架一般都会抽象出序列化器/反序列化器的接口，并提供不同的实现，以供使用者进行选择。简单起见，我这儿直接写一个静态类来实现protobuf协议的序列化和反序列化。
 
 ```java
 @UtilityClass
@@ -114,7 +116,9 @@ public class SerializationUtil {
 }
 ```
 
-搞定了序列化，接下来就可以来实现Netty的编解码器了，Netty实现编码器和解码器比较简单，直接继承MessageToByteEncoder和ByteToMessageDecoder并实现其抽象方法即可。
+搞定了序列化对象以及协议，接下来就是实现Netty的编解码器来完成序列化和反序列化的逻辑，有了编解码器，在Netty中就可以Speak to POJO了。
+
+Netty实现编码器和解码器比较简单，直接继承MessageToByteEncoder和ByteToMessageDecoder并实现其抽象方法即可。
 
 ```java
 public class TRpcEncoder extends MessageToByteEncoder {
@@ -166,6 +170,14 @@ public class TRpcDecoder extends ByteToMessageDecoder {
 ```
 
 ## 0x03 Server端
+
+Server端需要完成如下几个任务：
+
+1. 处理调用：处理客户端的调用，完成对应的本地方法调用，并调用结果返回给客户端
+2. 监听端口：启动一个Server，并监听一个端口，以接收客户端的请求
+3. 服务注册：服务端提供哪些服务的调用，需要在服务启动时注册到注册中心上
+
+接下来便来一步步实现上面任务的关键逻辑。
 
 ### ServerHandler
 
@@ -226,11 +238,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<TRpcRequest> {
 }
 ```
 
-接收到RpcRequest后通过CGLib反射调用目标对象对应的方法，并将调用返回的结果包装成Response返回
+上面代码的逻辑就是：接收到Request后通过CGLib反射调用目标对象对应的方法，并将调用返回的结果包装成Response返回
 
 ### ServerBootstrap
 
-接下来就是完成如何启动一个Server，为了方便扩展，抽象一个Server接口，通过调用Server的start的方法来完成Server的启动，监听一个目标端口。
+接下来就要启动一个Server来监听一个端口，为了方便扩展，抽象一个Server接口，通过调用Server的start的方法来完成Server的启动，监听目标端口以响应客户端调用。
 
 ```java
 public interface Server {
@@ -238,7 +250,7 @@ public interface Server {
 }
 ```
 
-在Netty中是通过ServerBootstrap来引导一个Server，接下就来实现一个SimpleServer来完成引导过程。
+在Netty中是通过ServerBootstrap来引导一个Server，这里实现了一个SimpleServer来完成引导过程。
 
 ```java
 @Slf4j
