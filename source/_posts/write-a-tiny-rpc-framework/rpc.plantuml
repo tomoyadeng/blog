@@ -1,0 +1,7 @@
+@startuml
+
+[Registry] <-- [Server] : 1.register
+[Registry] <- [Client] : 2. disocvery
+
+[Server] <- [Client] : 3. call
+@enduml
