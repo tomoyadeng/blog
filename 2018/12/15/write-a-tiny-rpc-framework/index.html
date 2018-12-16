@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>造轮子： 写一个简单的RPC框架 | Tomoya&#39;s Blog</title>
+  <meta name="description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见https://github.com/tomoyadeng/trpc">
+<meta name="keywords" content="rpc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="造轮子： 写一个简单的RPC框架">
+<meta property="og:url" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/index.html">
+<meta property="og:site_name" content="Tomoya&#39;s Blog">
+<meta property="og:description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见https://github.com/tomoyadeng/trpc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/rpc.png">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/rpc-call.png">
+<meta property="og:updated_time" content="2018-12-16T12:50:15.800Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="造轮子： 写一个简单的RPC框架">
+<meta name="twitter:description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见https://github.com/tomoyadeng/trpc">
+<meta name="twitter:image" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/rpc.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Tomoya&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/blog/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/tomoyadeng" target="_blank">
+          <img class="img-circle img-rotate" src="/blog/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Tomoya Deng</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/blog/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Framework/">Framework</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java/">Java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Middleware/">Middleware</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Tools/">Tools</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kafka/">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kubernetes/">kubernetes</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/mysql/">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/rpc/">rpc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring-boot/">spring boot</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/blog/tags/Java/" style="font-size: 13.67px;">Java</a> <a href="/blog/tags/docker/" style="font-size: 13.67px;">docker</a> <a href="/blog/tags/kafka/" style="font-size: 13px;">kafka</a> <a href="/blog/tags/kubernetes/" style="font-size: 14px;">kubernetes</a> <a href="/blog/tags/mysql/" style="font-size: 13.67px;">mysql</a> <a href="/blog/tags/rpc/" style="font-size: 13px;">rpc</a> <a href="/blog/tags/spring/" style="font-size: 13px;">spring</a> <a href="/blog/tags/spring-boot/" style="font-size: 13.33px;">spring boot</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/09/">September 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Middleware/">Middleware</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/12/15/write-a-tiny-rpc-framework/" class="title">造轮子： 写一个简单的RPC框架</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-15T13:31:32.000Z" itemprop="datePublished">2018-12-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/12/08/build-docker-image-for-gitbook/" class="title">构建 gitbook 的 docker 镜像</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-08T15:46:32.000Z" itemprop="datePublished">2018-12-08</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/31/k8s-mysql-cluster/" class="title">K8s上部署MySQL主从</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-31T11:34:59.000Z" itemprop="datePublished">2018-10-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/12/k8s-in-ubuntu18.04/" class="title">K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-12T12:13:48.000Z" itemprop="datePublished">2018-10-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/07/simplify-code-with-stream-api/" class="title">使用 Stream API 简化代码</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-07T13:11:07.000Z" itemprop="datePublished">2018-10-07</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-write-a-tiny-rpc-framework" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      造轮子： 写一个简单的RPC框架
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2018/12/15/write-a-tiny-rpc-framework/" class="article-date">
+	  <time datetime="2018-12-15T13:31:32.000Z" itemprop="datePublished">2018-12-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Middleware/">Middleware</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/rpc/">rpc</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2018/12/15/write-a-tiny-rpc-framework/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 2.5k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 11(minutes)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>这两天在看<a href="https://book.douban.com/subject/27038538/" target="_blank" rel="noopener">《Netty实战》</a>这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见<a href="https://github.com/tomoyadeng/trpc" target="_blank" rel="noopener">https://github.com/tomoyadeng/trpc</a></p>
+<a id="more"></a>
+<h2 id="0x00-RPC要素以及技术选型"><a href="#0x00-RPC要素以及技术选型" class="headerlink" title="0x00 RPC要素以及技术选型"></a>0x00 RPC要素以及技术选型</h2><p>RPC(远程过程调用)，简单来讲就是要实现：调用远程计算机上的服务，就像调用本地服务一样。</p>
+<img src="/blog/2018/12/15/write-a-tiny-rpc-framework/rpc.png">
+<p>一个简单的RPC主要包含如下的几个要素：</p>
+<ol>
+<li>注册中心(Registry): 提供服务注册与服务发现的功能</li>
+<li>服务提供方-Provider(Server): 服务提供方</li>
+<li>服务调用方-Consumer(Client): 服务调用方</li>
+</ol>
+<p>一次RPC调用的流程如下图（忽略掉注册和发现的过程）：</p>
+<img src="/blog/2018/12/15/write-a-tiny-rpc-framework/rpc-call.png">
+<p>根据RPC的技术需求，我使用如下技术选型:</p>
+<table>
+<thead>
+<tr>
+<th>技术关键点</th>
+<th>说明</th>
+<th>技术选型</th>
+<th>选型说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>注册中心</td>
+<td>要有注册中心来提供服务注册和发现功能</td>
+<td>Etcd</td>
+<td>主要考虑到在K8s中部署Etcd比Zookeeper更容易</td>
+</tr>
+<tr>
+<td>网络框架</td>
+<td>实现远程调用需要将Client的请求发送到Server并接收调用结果</td>
+<td>Netty</td>
+<td>公认的高性能网络框架</td>
+</tr>
+<tr>
+<td>序列化</td>
+<td>编程时是面向对象的，传输是面向字节的，需要在网络传输时将对象和字节互相转化</td>
+<td>Protostuff</td>
+<td>基于 Protobuf 序列化框架，面向 POJO，无需编写 .proto 文件</td>
+</tr>
+<tr>
+<td>动态代理</td>
+<td>动态代理客户端使客户端不感知远程调用的过程</td>
+<td>CGLib</td>
+<td>强大的、高性能的代码生成库</td>
+</tr>
+</tbody>
+</table>
+<p>接下来就看看如何实现各个层次的逻辑吧。</p>
+<h2 id="0x01-服务注册-amp-服务发现"><a href="#0x01-服务注册-amp-服务发现" class="headerlink" title="0x01 服务注册 &amp; 服务发现"></a>0x01 服务注册 &amp; 服务发现</h2><p>首先定义好注册中心的接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Registry</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">register</span><span class="params">(EndPoint endPoint, String serviceName)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">List&lt;EndPoint&gt; <span class="title">discovery</span><span class="params">(String serviceName)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EndPoint</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String host;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> port;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> host + <span class="string">":"</span> + port;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我这里采用Etcd作为注册中心，因此实现了一个<a href="https://github.com/tomoyadeng/trpc/blob/master/trpc-core/src/main/java/com/tomoyadeng/trpc/core/registry/EtcdRegistry.java" target="_blank" rel="noopener">EtcdRegistry</a></p>
+<h2 id="0x02-序列化-反序列化-amp-Netty编码-解码"><a href="#0x02-序列化-反序列化-amp-Netty编码-解码" class="headerlink" title="0x02 序列化/反序列化 &amp; Netty编码/解码"></a>0x02 序列化/反序列化 &amp; Netty编码/解码</h2><p>RPC要把一次本地方法调用变成能够被网络传输的字节流，那么就需要考虑序列化的对象以及序列化协议。</p>
+<p>首先定义方法的调用和返回两个对象实体：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TRpcRequest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> id;</span><br><span class="line">    <span class="keyword">private</span> String className;</span><br><span class="line">    <span class="keyword">private</span> String methodName;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;?&gt;[] paramTypes;</span><br><span class="line">    <span class="keyword">private</span> Object[] params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TRpcResponse</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> id;</span><br><span class="line">    <span class="keyword">private</span> Throwable exception;</span><br><span class="line">    <span class="keyword">private</span> Object result;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> exception != <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>确定了需要序列化的对象实体，就要确定序列化的协议，并实现序列化和反序列化方法。一般高级的RPC框架都会抽象出序列化器/反序列化器的接口，并提供不同的实现供使用者选择。简单起见，我这儿直接写一个静态类来实现protobuf的序列化和反序列化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UtilityClass</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SerializationUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">byte</span>[] serialize(T o) &#123;</span><br><span class="line">        Schema schema = RuntimeSchema.getSchema(o.getClass());</span><br><span class="line">        <span class="keyword">return</span> ProtostuffIOUtil.toByteArray(o, schema, LinkedBuffer.allocate());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">desrialize</span><span class="params">(<span class="keyword">byte</span>[] bytes, Class&lt;T&gt; clazz)</span> </span>&#123;</span><br><span class="line">        Schema&lt;T&gt; schema = RuntimeSchema.createFrom(clazz);</span><br><span class="line">        T message = schema.newMessage();</span><br><span class="line">        ProtostuffIOUtil.mergeFrom(bytes, message, schema);</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>搞定了序列化，接下来就可以来实现Netty的编解码器了，Netty实现编码器和解码器比较简单，直接继承MessageToByteEncoder和ByteToMessageDecoder并实现其抽象方法即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TRpcEncoder</span> <span class="keyword">extends</span> <span class="title">MessageToByteEncoder</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;?&gt; targetClazz;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TRpcEncoder</span><span class="params">(Class&lt;?&gt; targetClazz)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.targetClazz = targetClazz;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">encode</span><span class="params">(ChannelHandlerContext ctx, Object msg, ByteBuf out)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (targetClazz.isInstance(msg)) &#123;</span><br><span class="line">            <span class="keyword">byte</span>[] data = SerializationUtil.serialize(msg);</span><br><span class="line">            out.writeInt(data.length);</span><br><span class="line">            out.writeBytes(data);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TRpcDecoder</span> <span class="keyword">extends</span> <span class="title">ByteToMessageDecoder</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;?&gt; targetClazz;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TRpcDecoder</span><span class="params">(Class&lt;?&gt; targetClazz)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.targetClazz = targetClazz;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (in.readableBytes() &lt; <span class="number">4</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        in.markReaderIndex();</span><br><span class="line">        <span class="keyword">int</span> dataLen = in.readInt();</span><br><span class="line">        <span class="keyword">if</span> (dataLen &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            ctx.close();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (in.readableBytes() &lt; dataLen) &#123;</span><br><span class="line">            in.resetReaderIndex();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[dataLen];</span><br><span class="line">        in.readBytes(data);</span><br><span class="line">        Object obj = SerializationUtil.desrialize(data, targetClazz);</span><br><span class="line">        out.add(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="0x03-Server端"><a href="#0x03-Server端" class="headerlink" title="0x03 Server端"></a>0x03 Server端</h2><h3 id="ServerHandler"><a href="#ServerHandler" class="headerlink" title="ServerHandler"></a>ServerHandler</h3><p>Netty的处理流程是基于pipeline的，pipeline中包含一些完成具体操作的handler，前面已经实现的编码器和解码器也是handler，现在就要实现接收消息并完成调用的handler。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@ChannelHandler</span>.Sharable</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">TRpcRequest</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, Object&gt; clazzMap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServerHandler</span><span class="params">(Map&lt;String, Object&gt; clazzMap)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.clazzMap = clazzMap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, TRpcRequest msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        log.info(<span class="string">"receive a request, id=&#123;&#125;"</span>, msg.getId());</span><br><span class="line">        TRpcResponse response = getResponse(msg);</span><br><span class="line"></span><br><span class="line">        ctx.writeAndFlush(response).addListener((GenericFutureListener&lt;ChannelFuture&gt;) future -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (!future.isSuccess()) &#123;</span><br><span class="line">                log.error(<span class="string">"exception"</span>, future.cause());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> TRpcResponse <span class="title">getResponse</span><span class="params">(TRpcRequest request)</span> </span>&#123;</span><br><span class="line">        TRpcResponse response = <span class="keyword">new</span> TRpcResponse();</span><br><span class="line">        response.setId(request.getId());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Object target = clazzMap.get(request.getClassName());</span><br><span class="line">            <span class="keyword">if</span> (target == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(request.getClassName() + <span class="string">" not registered"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Class&lt;?&gt; clazz = Class.forName(request.getClassName());</span><br><span class="line">            FastClass fastClass = FastClass.create(clazz);</span><br><span class="line">            FastMethod fastMethod = fastClass.getMethod(request.getMethodName(), request.getParamTypes());</span><br><span class="line">            Object result = fastMethod.invoke(target, request.getParams());</span><br><span class="line">            response.setResult(result);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            response.setException(e);</span><br><span class="line">            log.error(<span class="string">"invoke exception"</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (cause <span class="keyword">instanceof</span> IOException) &#123;</span><br><span class="line">            log.info(<span class="string">"exception"</span>, cause);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">super</span>.exceptionCaught(ctx, cause);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接收到RpcRequest后通过CGLib反射调用目标对象对应的方法，并将调用返回的结果包装成Response返回</p>
+<h3 id="ServerBootstrap"><a href="#ServerBootstrap" class="headerlink" title="ServerBootstrap"></a>ServerBootstrap</h3><p>接下来就是完成如何启动一个Server，为了方便扩展，抽象一个Server接口，通过调用Server的start的方法来完成Server的启动，监听一个目标端口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Netty中是通过ServerBootstrap来引导一个Server，接下就来实现一个SimpleServer来完成引导过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleServer</span> <span class="keyword">implements</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> EndPoint endPoint;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, Object&gt; clazzMap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleServer</span><span class="params">(EndPoint endPoint, Map&lt;String, Object&gt; clazzMap)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.endPoint = endPoint;</span><br><span class="line">        <span class="keyword">this</span>.clazzMap = clazzMap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        EventLoopGroup boosGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ServerBootstrap bootstrap = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">            bootstrap.group(boosGroup, workerGroup)</span><br><span class="line">                    .channel(NioServerSocketChannel.class)</span><br><span class="line">                    .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                            ch.pipeline()</span><br><span class="line">                                    .addLast(<span class="keyword">new</span> TRpcDecoder(TRpcRequest.class))</span><br><span class="line">                                    .addLast(<span class="keyword">new</span> TRpcEncoder(TRpcResponse.class))</span><br><span class="line">                                    .addLast(<span class="keyword">new</span> ServerHandler(clazzMap));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;)</span><br><span class="line">                    .option(ChannelOption.SO_BACKLOG, <span class="number">1024</span>)</span><br><span class="line">                    .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)</span><br><span class="line">                    .childOption(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>)</span><br><span class="line">                    .childOption(ChannelOption.TCP_NODELAY, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">"Server start at &#123;&#125;"</span>, endPoint);</span><br><span class="line">            ChannelFuture future = bootstrap.bind(endPoint.getHost(), endPoint.getPort()).sync();</span><br><span class="line"></span><br><span class="line">            future.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">"exception"</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            workerGroup.shutdownGracefully();</span><br><span class="line">            boosGroup.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h3><p>服务注册就是要将服务提供方所能提供的服务注册到注册中心上。为了使代码更小的侵入性，这里通过一个自定义的注解来标记要注册的服务实现其对应的接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RpcService &#123;</span><br><span class="line">    Class&lt;?&gt; value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来实现在服务启动的时候就去扫描指定路径，完成服务注册。这里使用开源的Reflections来完成包扫描，并拿到所有带RpcService注解的实现类，解析出所有的服务名称后调用注册接口完成注册。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Reflections reflections = <span class="keyword">new</span> Reflections(packagePath);</span><br><span class="line">Set&lt;Class&lt;?&gt;&gt; classes = reflections.getTypesAnnotatedWith(RpcService.class);</span><br><span class="line"></span><br><span class="line">Map&lt;String, Object&gt; serviceMap = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line">classes.forEach(clazz -&gt; &#123;</span><br><span class="line">    RpcService rpcService = clazz.getAnnotation(RpcService.class);</span><br><span class="line">    Class&lt;?&gt; rpcClazz = rpcService.value();</span><br><span class="line">    String clazzName = rpcClazz.getName();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Object obj = clazz.getConstructor().newInstance();</span><br><span class="line">        serviceMap.put(clazzName, obj);</span><br><span class="line">        registry.register(endPoint, clazzName);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        log.error(<span class="string">"exception in register class "</span> + clazzName, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-Client端"><a href="#0x04-Client端" class="headerlink" title="0x04 Client端"></a>0x04 Client端</h2><p>Client 端要完成如下几个任务：</p>
+<ol>
+<li>连接到服务端： 客服端需要连接到具体的服务端，才能进行远程调用(网络传输)</li>
+<li>服务发现： 在调用远程服务时，需要到注册中心上查找具体有哪些服务端能提供对应的服务</li>
+<li>动态代理： 需要动态生成代理对象来封装远程调用的网络过程</li>
+</ol>
+<h3 id="Handler"><a href="#Handler" class="headerlink" title="Handler"></a>Handler</h3><p>首先要实现Handler来处理客服端发送请求和接收响应，由于Netty的handler是异步的，这里用简单的<code>wait/notify</code>来完成异步转同步</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, TRpcResponse msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.response = msg;</span><br><span class="line">    log.info(<span class="string">"receive rsp id=&#123;&#125;, result=&#123;&#125;"</span>, msg.getId(), msg.getResult());</span><br><span class="line">    <span class="keyword">synchronized</span> (obj) &#123;</span><br><span class="line">        obj.notifyAll();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> TRpcResponse <span class="title">send</span><span class="params">(TRpcRequest request)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (channelFuture == <span class="keyword">null</span>) &#123;</span><br><span class="line">        connect();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    channelFuture.channel().writeAndFlush(request).sync();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (obj) &#123;</span><br><span class="line">        obj.wait();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h3><p>客户端的引导过程实际上就是连接到指定的远端地址</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    Bootstrap bootstrap = <span class="keyword">new</span> Bootstrap();</span><br><span class="line">    bootstrap.group(group)</span><br><span class="line">            .channel(NioSocketChannel.class)</span><br><span class="line">            .handler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel channel)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                    channel.pipeline()</span><br><span class="line">                            .addLast(<span class="keyword">new</span> TRpcEncoder(TRpcRequest.class))</span><br><span class="line">                            .addLast(<span class="keyword">new</span> TRpcDecoder(TRpcResponse.class))</span><br><span class="line">                            .addLast(SimpleClient.<span class="keyword">this</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .option(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">    channelFuture = bootstrap.connect(endPoint.getHost(), endPoint.getPort()).sync();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><p>服务发现就是要到注册中心上查找目标服务的服务提供方。为了使代码更小的侵入性，这里通过一个自定义的注解来标记要进行服务发现的接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RpcApi &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来就是实现在应用启动时，去扫描指定路径下的RPC接口，发现服务提供方的地址，将结果缓存下来并定时进行刷新。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Reflections reflections = <span class="keyword">new</span> Reflections(packagePath);</span><br><span class="line">    Set&lt;Class&lt;?&gt;&gt; classes = reflections.getTypesAnnotatedWith(RpcApi.class);</span><br><span class="line"></span><br><span class="line">    ScheduledExecutorService executorService = <span class="keyword">new</span> ScheduledThreadPoolExecutor(<span class="number">2</span>);</span><br><span class="line">    classes.forEach(clazz -&gt; executorService.scheduleAtFixedRate(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (clazz.isInterface()) &#123;</span><br><span class="line">                String className = clazz.getName();</span><br><span class="line">                List&lt;EndPoint&gt; endPoints = registry.discovery(className);</span><br><span class="line">                log.info(<span class="string">"discovery &#123;&#125; endPoints for &#123;&#125;"</span>, endPoints.size(), className);</span><br><span class="line">                serviceMap.put(className, endPoints);</span><br><span class="line">                endPoints.forEach(endPoint -&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (clientPool.get(endPoint) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        Client client = getClient(endPoint, <span class="keyword">this</span>.group);</span><br><span class="line">                        clientPool.put(endPoint, client);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">"exception in register clazz "</span> + clazz.getName(), e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="number">0</span>, <span class="number">60</span>, TimeUnit.SECONDS));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="动态代理实现"><a href="#动态代理实现" class="headerlink" title="动态代理实现"></a>动态代理实现</h3><p>通过CGLib来实现客户端的动态代理，首先实现一个MethodInterceptor来完成如下任务：</p>
+<ol>
+<li>构造request</li>
+<li>获取client完成网络调用</li>
+<li>解析response中的调用结果</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClientInterceptor</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ClientFactory clientFactory;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ClientInterceptor</span><span class="params">(ClientFactory clientFactory)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.clientFactory = clientFactory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object obj, Method method, Object[] args, MethodProxy proxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        TRpcRequest request = <span class="keyword">new</span> TRpcRequest();</span><br><span class="line">        Class clazz = method.getDeclaringClass();</span><br><span class="line">        String clazzName = clazz.getName();</span><br><span class="line"></span><br><span class="line">        request.setId(System.currentTimeMillis());</span><br><span class="line">        request.setClassName(clazzName);</span><br><span class="line">        request.setMethodName(method.getName());</span><br><span class="line">        request.setParamTypes(method.getParameterTypes());</span><br><span class="line">        request.setParams(args);</span><br><span class="line"></span><br><span class="line">        Client client = clientFactory.getClient(clazzName);</span><br><span class="line"></span><br><span class="line">        TRpcResponse response = client.send(request);</span><br><span class="line">        <span class="keyword">if</span> (response.hasException()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> response.getException();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> response.getResult();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>随后提供一个代理工厂类来完成代理对象的创建</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClientProxy</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">create</span><span class="params">(Class&lt;T&gt; clazz, ClientFactory clientFactory)</span> </span>&#123;</span><br><span class="line">        Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">        enhancer.setSuperclass(clazz);</span><br><span class="line">        enhancer.setCallback(<span class="keyword">new</span> ClientInterceptor(clientFactory));</span><br><span class="line">        <span class="keyword">return</span> (T) enhancer.create();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/" title="造轮子： 写一个简单的RPC框架" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/tomoyadeng" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/blog/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/tomoyadeng" target="_blank"><span class="text-dark">Tomoya Deng</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/blog/2018/12/08/build-docker-image-for-gitbook/" title="构建 gitbook 的 docker 镜像"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2017 - 2018 Tomoya Deng
+        
+        <!-- <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div> -->
+    </div>
+</footer>
+
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/blog/js/plugin.min.js"></script>
+<script src="/blog/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/';
+        
+        this.page.identifier = 'write-a-tiny-rpc-framework';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'tomoya-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
