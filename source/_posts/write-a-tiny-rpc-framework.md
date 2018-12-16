@@ -489,3 +489,184 @@ public class ClientProxy {
     }
 }
 ```
+
+## 0x05 测试
+
+接下就是使用刚刚写好的RPC框架来实现一个简单的RPC调用流程
+
+### Etcd
+
+如何启动一个本地的Etcd作为注册中心这里就不赘述了，因为在Windows上启动一个Etcd比较简单，属于开箱即用的那种。
+
+### API
+
+首先定义好一个要进行RPC调用的接口，并将API打包成jar发布。
+
+```java
+@RpcApi
+public interface HelloService {
+    String hello(String hello);
+}
+```
+
+### Server端实现
+
+新建一个 Spring boot 工程来实现Server端。
+
+首先要添加API的依赖
+
+```groovy
+compile group: 'com.tomoyadeng', name: 'trpc-sample-api', version: '1.0'
+compile('org.springframework.boot:spring-boot-starter-web')
+```
+
+编写API的实现类
+
+```java
+@Slf4j
+@RpcService(value = HelloService.class)
+public class HelloServiceImpl implements HelloService {
+    @Override
+    public String hello(String s) {
+
+        return "[" + getHostName() + "]: " + s;
+    }
+
+    private String getHostName() {
+        try {
+            return Inet4Address.getLocalHost().toString();
+        } catch (UnknownHostException e) {
+            return "localhost";
+        }
+    }
+}
+```
+
+编写启动类：启动类中包含了一些配置的处理
+
+```java
+public class ServerBootstrap {
+
+    @Value("${app.trpc.providerHost:#{null}}")
+    private String providerHost;
+
+    @Value("${app.trpc.providerPort:#{null}}")
+    private String providerPort;
+
+    @Value("${app.trpc.etcdRegistryAddr:#{null}}")
+    private String etcdResgitryAddress;
+
+    @PostConstruct
+    public void init() {
+        Configuration configuration = new Configuration();
+        if (providerHost != null) {
+            configuration.setProviderHost(providerHost);
+        }
+
+        if (providerPort != null) {
+            configuration.setProviderPort(Integer.parseInt(providerPort));
+        }
+
+        Registry registry = etcdResgitryAddress == null ? new EtcdRegistry() : new EtcdRegistry(etcdResgitryAddress);
+        start(configuration, registry);
+    }
+
+    private void start(Configuration configuration, Registry registry) {
+        try {
+            ServerStarter starter = new ServerStarter(configuration, registry, "com.tomoyadeng.trpc.sample.server.impl");
+            Executors.newSingleThreadExecutor().execute(starter::start);
+        } catch (Exception e) {
+            log.error("exception", e);
+        }
+    }
+}
+```
+
+启动应用：
+
+```java
+@SpringBootApplication
+public class TRpcSampleServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(TRpcSampleServerApplication.class, args);
+    }
+}
+```
+
+### Client端实现
+
+新建一个 Spring boot 工程来实现客户端，并提供一个Rest调用的接口来触发RPC的调用。
+
+首先还是添加 API的依赖，以及 Spring boot web 的依赖
+
+```groovy
+compile group: 'com.tomoyadeng', name: 'trpc-sample-api', version: '1.0'
+compile('org.springframework.boot:spring-boot-starter-web')
+```
+
+添加配置类，用以实现动态代理对象的自动装配
+
+```java
+@org.springframework.context.annotation.Configuration
+public class ClientConfiguration {
+
+    @Bean
+    public ClientFactory clientFactory() {
+        Configuration configuration = new Configuration();
+        Registry registry = registry(configuration);
+        ClientFactory clientFactory = new DefaultClientFactory(configuration, registry, "com.tomoyadeng.trpc.sample.api");
+        clientFactory.init();
+        return clientFactory;
+    }
+
+    @Bean
+    public Registry registry(Configuration configuration) {
+        return new EtcdRegistry();
+    }
+
+    @Bean
+    @Scope(scopeName = "prototype")
+    public HelloService helloService(ClientFactory clientFactory) {
+        return ClientProxy.create(HelloService.class, clientFactory);
+    }
+}
+```
+
+提供一个RestController
+
+```java
+@RestController
+@RequestMapping(path = "/api/v1/trpcsample/hello")
+public class HelloController {
+
+    @Autowired
+    private HelloService helloService;
+
+    @GetMapping("")
+    public String hello() {
+        return helloService.hello("hello");
+    }
+}
+```
+
+启动应用
+
+```java
+@SpringBootApplication
+public class TRpcSampleClientApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(TRpcSampleClientApplication.class, args);
+    }
+}
+```
+
+增加 Spring boot 的配置文件`application.yaml`
+
+```yaml
+server:
+  port: 80
+```
+
+因为我的服务端也启动在本机的，spring boot web 内嵌的tomcat服务器的默认端口是8080，刚才起服务端的时候已经占用了这个端口，客户端需要换一个端口。
+
+启动OK后，直接通过浏览器访问`http://localhost//api/v1/trpcsample/hello`进行测试
