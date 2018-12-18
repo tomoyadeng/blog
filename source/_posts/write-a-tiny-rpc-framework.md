@@ -1,12 +1,12 @@
 ---
-title: 造轮子： 写一个简单的RPC框架
+title: 仿写一个简单的RPC框架
 date: 2018-12-15 21:31:32
 tags: 
     - rpc
 categories: Middleware
 ---
 
-这两天在看[《Netty实战》](https://book.douban.com/subject/27038538/)这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见[https://github.com/tomoyadeng/trpc](https://github.com/tomoyadeng/trpc)
+这两天在看[《Netty实战》](https://book.douban.com/subject/27038538/)这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，便决定学习使用Netty实现一些小东西以加深理解。在网上看了很多资料，遂决定仿造网上的一些教程用Netty实现一个简单的RPC，顺便也学习一下RPC的原理。源码见[https://github.com/tomoyadeng/trpc](https://github.com/tomoyadeng/trpc)
 
 <!-- more -->
 
@@ -26,11 +26,11 @@ RPC(远程过程调用)，简单来讲就是要实现：调用远程计算机上
 
 {% asset_img rpc-call.png %}
 
-根据RPC的技术需求，我使用如下技术选型:
+根据RPC的技术需求，参考网上其他小伙伴的例子，最后决定使用下面一些技术:
 
 |技术关键点|说明|技术选型|选型说明|
 |---|---|---|---|
-|注册中心|要有注册中心来提供服务注册和发现功能|Etcd|主要考虑到在K8s中部署Etcd比Zookeeper更容易|
+|注册中心|要有注册中心来提供服务注册和发现功能|Etcd|主要考虑到部署Etcd比Zookeeper更容易|
 |网络框架|实现远程调用需要将Client的请求发送到Server并接收调用结果|Netty|公认的高性能网络框架|
 |序列化|编程时是面向对象的，传输是面向字节的，需要在网络传输时将对象和字节互相转化|Protostuff|基于 Protobuf 序列化框架，面向 POJO，无需编写 .proto 文件|
 |动态代理|动态代理客户端使客户端不感知远程调用的过程|CGLib|强大的、高性能的代码生成库|
@@ -670,3 +670,7 @@ server:
 因为我的服务端也启动在本机的，spring boot web 内嵌的tomcat服务器的默认端口是8080，刚才起服务端的时候已经占用了这个端口，客户端需要换一个端口。
 
 启动OK后，直接通过浏览器访问`http://localhost//api/v1/trpcsample/hello`进行测试
+
+## 0x06 参考资料
+
++ [徒手撸框架--实现 RPC 远程调用](https://juejin.im/post/5bac34b4e51d450e5d0b236b)
