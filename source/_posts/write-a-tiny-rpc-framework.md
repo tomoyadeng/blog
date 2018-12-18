@@ -517,7 +517,7 @@ public interface HelloService {
 
 ```groovy
 compile group: 'com.tomoyadeng', name: 'trpc-sample-api', version: '1.0'
-compile('org.springframework.boot:spring-boot-starter-web')
+compile('org.springframework.boot:spring-boot-starter')
 ```
 
 编写API的实现类
@@ -660,16 +660,7 @@ public class TRpcSampleClientApplication {
 }
 ```
 
-增加 Spring boot 的配置文件`application.yaml`
-
-```yaml
-server:
-  port: 80
-```
-
-因为我的服务端也启动在本机的，spring boot web 内嵌的tomcat服务器的默认端口是8080，刚才起服务端的时候已经占用了这个端口，客户端需要换一个端口。
-
-启动OK后，直接通过浏览器访问`http://localhost//api/v1/trpcsample/hello`进行测试
+启动OK后，直接通过浏览器访问`http://localhost:8080/api/v1/trpcsample/hello`进行测试
 
 ## 0x06 参考资料
 
