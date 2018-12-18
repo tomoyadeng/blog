@@ -17,21 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>造轮子： 写一个简单的RPC框架 | Tomoya&#39;s Blog</title>
-  <meta name="description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见https://github.com/tomoyadeng/trpc">
+  <title>仿写一个简单的RPC框架 | Tomoya&#39;s Blog</title>
+  <meta name="description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，便决定学习使用Netty实现一些小东西以加深理解。在网上看了很多资料，遂决定仿造网上的一些教程用Netty实现一个简单的RPC，顺便也学习一下RPC的原理。源码见https://github.com/tomoyadeng/trpc">
 <meta name="keywords" content="rpc">
 <meta property="og:type" content="article">
-<meta property="og:title" content="造轮子： 写一个简单的RPC框架">
+<meta property="og:title" content="仿写一个简单的RPC框架">
 <meta property="og:url" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
-<meta property="og:description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见https://github.com/tomoyadeng/trpc">
+<meta property="og:description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，便决定学习使用Netty实现一些小东西以加深理解。在网上看了很多资料，遂决定仿造网上的一些教程用Netty实现一个简单的RPC，顺便也学习一下RPC的原理。源码见https://github.com/tomoyadeng/trpc">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/rpc.png">
 <meta property="og:image" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/rpc-call.png">
-<meta property="og:updated_time" content="2018-12-16T14:03:56.935Z">
+<meta property="og:updated_time" content="2018-12-18T13:55:23.257Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="造轮子： 写一个简单的RPC框架">
-<meta name="twitter:description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见https://github.com/tomoyadeng/trpc">
+<meta name="twitter:title" content="仿写一个简单的RPC框架">
+<meta name="twitter:description" content="这两天在看《Netty实战》这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，便决定学习使用Netty实现一些小东西以加深理解。在网上看了很多资料，遂决定仿造网上的一些教程用Netty实现一个简单的RPC，顺便也学习一下RPC的原理。源码见https://github.com/tomoyadeng/trpc">
 <meta name="twitter:image" content="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/rpc.png">
   <!-- Canonical links -->
   <link rel="canonical" href="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/index.html">
@@ -212,7 +212,7 @@
                 <a class="category-link" href="/blog/categories/Middleware/">Middleware</a>
               </p>
               <p class="item-title">
-                <a href="/blog/2018/12/15/write-a-tiny-rpc-framework/" class="title">造轮子： 写一个简单的RPC框架</a>
+                <a href="/blog/2018/12/15/write-a-tiny-rpc-framework/" class="title">仿写一个简单的RPC框架</a>
               </p>
               <p class="item-date">
                 <time datetime="2018-12-15T13:31:32.000Z" itemprop="datePublished">2018-12-15</time>
@@ -300,7 +300,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      造轮子： 写一个简单的RPC框架
+      仿写一个简单的RPC框架
     </h1>
   
 
@@ -340,7 +340,7 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>这两天在看<a href="https://book.douban.com/subject/27038538/" target="_blank" rel="noopener">《Netty实战》</a>这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，决定使用Netty实现些小东西以加深理解。思来想去，决定用netty来实现一个简单的RPC框架，于是便有了此篇文章。源码见<a href="https://github.com/tomoyadeng/trpc" target="_blank" rel="noopener">https://github.com/tomoyadeng/trpc</a></p>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>这两天在看<a href="https://book.douban.com/subject/27038538/" target="_blank" rel="noopener">《Netty实战》</a>这本书，本着“纸上得来终觉浅，绝知此事要躬行”的态度，便决定学习使用Netty实现一些小东西以加深理解。在网上看了很多资料，遂决定仿造网上的一些教程用Netty实现一个简单的RPC，顺便也学习一下RPC的原理。源码见<a href="https://github.com/tomoyadeng/trpc" target="_blank" rel="noopener">https://github.com/tomoyadeng/trpc</a></p>
 <a id="more"></a>
 <h2 id="0x00-RPC要素以及技术选型"><a href="#0x00-RPC要素以及技术选型" class="headerlink" title="0x00 RPC要素以及技术选型"></a>0x00 RPC要素以及技术选型</h2><p>RPC(远程过程调用)，简单来讲就是要实现：调用远程计算机上的服务，就像调用本地服务一样。</p>
 <img src="/blog/2018/12/15/write-a-tiny-rpc-framework/rpc.png">
@@ -352,7 +352,7 @@
 </ol>
 <p>一次RPC调用的流程如下图（忽略掉注册和发现的过程）：</p>
 <img src="/blog/2018/12/15/write-a-tiny-rpc-framework/rpc-call.png">
-<p>根据RPC的技术需求，我使用如下技术选型:</p>
+<p>根据RPC的技术需求，参考网上其他小伙伴的例子，最后决定使用下面一些技术:</p>
 <table>
 <thead>
 <tr>
@@ -367,7 +367,7 @@
 <td>注册中心</td>
 <td>要有注册中心来提供服务注册和发现功能</td>
 <td>Etcd</td>
-<td>主要考虑到在K8s中部署Etcd比Zookeeper更容易</td>
+<td>主要考虑到部署Etcd比Zookeeper更容易</td>
 </tr>
 <tr>
 <td>网络框架</td>
@@ -472,6 +472,9 @@
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
 <p>因为我的服务端也启动在本机的，spring boot web 内嵌的tomcat服务器的默认端口是8080，刚才起服务端的时候已经占用了这个端口，客户端需要换一个端口。</p>
 <p>启动OK后，直接通过浏览器访问<code>http://localhost//api/v1/trpcsample/hello</code>进行测试</p>
+<h2 id="0x06-参考资料"><a href="#0x06-参考资料" class="headerlink" title="0x06 参考资料"></a>0x06 参考资料</h2><ul>
+<li><a href="https://juejin.im/post/5bac34b4e51d450e5d0b236b" target="_blank" rel="noopener">徒手撸框架–实现 RPC 远程调用</a></li>
+</ul>
 
       
     </div>
@@ -481,7 +484,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/" title="造轮子： 写一个简单的RPC框架" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/</a>
+      <a href="https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/" title="仿写一个简单的RPC框架" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2018/12/15/write-a-tiny-rpc-framework/</a>
     </li>
     
     <li class="post-copyright-license">
