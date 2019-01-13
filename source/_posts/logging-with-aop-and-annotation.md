@@ -83,7 +83,6 @@ public class LogAspect {
         // 根据方法签名拿到方法的类，并通过类获取对应的logger
         Logger logger = LoggerFactory.getLogger(signature.getMethod().getDeclaringClass());
 
-        // 拿到函数上注解内的msg 和 threshold
         Method m = signature.getMethod();
         long start = System.currentTimeMillis();
         try {
