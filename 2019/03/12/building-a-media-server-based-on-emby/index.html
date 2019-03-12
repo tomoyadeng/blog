@@ -17,16 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Archive | Tomoya&#39;s Blog</title>
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Tomoya&#39;s Blog">
-<meta property="og:url" content="https://tomoyadeng.github.io/blog/archives/index.html">
+  <title>基于Emby搭建媒体服务器 | Tomoya&#39;s Blog</title>
+  <meta name="description" content="最近，团队里在开展针对新员工的一系列培训，并将培训过程录制成了一个个的视频。可是分享培训视频却十分的麻烦，基于samba将文件夹共享给团队成员，然后想看培训视频的同学将视频拷贝到本地进行观看，这样实在是太浪费时间和空间。于是，我想到完全可以利用组里的服务器自己搭建一个媒体服务器，把URL共享出去，这样组里面的小伙伴就可以在线观看培训视频了。 0x01 选型有了这个想法，接下来就是去google上找">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Emby搭建媒体服务器">
+<meta property="og:url" content="https://tomoyadeng.github.io/blog/2019/03/12/building-a-media-server-based-on-emby/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
+<meta property="og:description" content="最近，团队里在开展针对新员工的一系列培训，并将培训过程录制成了一个个的视频。可是分享培训视频却十分的麻烦，基于samba将文件夹共享给团队成员，然后想看培训视频的同学将视频拷贝到本地进行观看，这样实在是太浪费时间和空间。于是，我想到完全可以利用组里的服务器自己搭建一个媒体服务器，把URL共享出去，这样组里面的小伙伴就可以在线观看培训视频了。 0x01 选型有了这个想法，接下来就是去google上找">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-12T14:50:41.743Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tomoya&#39;s Blog">
+<meta name="twitter:title" content="基于Emby搭建媒体服务器">
+<meta name="twitter:description" content="最近，团队里在开展针对新员工的一系列培训，并将培训过程录制成了一个个的视频。可是分享培训视频却十分的麻烦，基于samba将文件夹共享给团队成员，然后想看培训视频的同学将视频拷贝到本地进行观看，这样实在是太浪费时间和空间。于是，我想到完全可以利用组里的服务器自己搭建一个媒体服务器，把URL共享出去，这样组里面的小伙伴就可以在线观看培训视频了。 0x01 选型有了这个想法，接下来就是去google上找">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://tomoyadeng.github.io/blog/archives/index.html">
+  <link rel="canonical" href="https://tomoyadeng.github.io/blog/2019/03/12/building-a-media-server-based-on-emby/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Tomoya&#39;s Blog" type="application/atom+xml">
   
@@ -284,182 +289,142 @@
   
   
 <main class="main" role="main">
-  	<article class="content article article-archives article-type-list" itemscope="">
-	    <header class="article-header">
-	      <h1 itemprop="title">Archive</h1>
-	      <p class="text-muted">Total 10 articles</p>
-	    </header>
-	    <div class="article-body">
-	      
-  
-  
+  <div class="content">
+  <article id="post-building-a-media-server-based-on-emby" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
-    
+    <div class="article-header">
       
+        
+  
+    <h1 class="article-title" itemprop="name">
+      基于Emby搭建媒体服务器
+    </h1>
+  
+
       
-      <section class="panel panel-default b-no">
-        <div class="panel-heading" role="tab">
-          <h3 class="panel-title">
-            <a data-toggle="collapse" href="#collapse2019" aria-expanded="true">
-              <i class="icon icon-calendar-plus text-active"></i><i class="icon icon-calendar-minus text"></i>
-              2019
-            </a>
-            <!-- <a href="/blog/archives/2019" class="archive-year">2019</a> -->
-          </h3>
-        </div>
-        <div id="collapse2019" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2019">
-        <div class="panel-body">
-          <div class="collection">
-    
-    
-<a href="/blog/2019/03/12/building-a-media-server-based-on-emby/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2019-03-12T14:50:23.000Z" itemprop="datePublished">2019-03-12</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> 基于Emby搭建媒体服务器
-</a>
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2019/03/12/building-a-media-server-based-on-emby/" class="article-date">
+	  <time datetime="2019-03-12T14:50:23.000Z" itemprop="datePublished">2019-03-12</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Tools/">Tools</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/docker/">docker</a>
+  </span>
 
 
-  
-    
-    
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2019/03/12/building-a-media-server-based-on-emby/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 582(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
       
-        </div></div></div></section>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>最近，团队里在开展针对新员工的一系列培训，并将培训过程录制成了一个个的视频。可是分享培训视频却十分的麻烦，基于samba将文件夹共享给团队成员，然后想看培训视频的同学将视频拷贝到本地进行观看，这样实在是太浪费时间和空间。于是，我想到完全可以利用组里的服务器自己搭建一个媒体服务器，把URL共享出去，这样组里面的小伙伴就可以在线观看培训视频了。</p>
+<h3 id="0x01-选型"><a href="#0x01-选型" class="headerlink" title="0x01 选型"></a>0x01 选型</h3><p>有了这个想法，接下来就是去google上找有没有方便快捷的开源项目可以直接使用，寻找方向就是能开箱即用快速搭建，并且在<a href="https://hub.docker.com/" target="_blank" rel="noopener">docker hub</a>上有现成的docker镜像。刚开始我看有人推荐了<a href="https://github.com/jellyfin/jellyfin" target="_blank" rel="noopener">jellyfin</a>，于是赶紧去<a href="https://hub.docker.com/r/jellyfin/jellyfin" target="_blank" rel="noopener">docker hub Jellyfin</a>查一查怎么使用，简单写了个docker-compose文件就将jellyfin起了起来。但在使用的过程中发现jellyfin的性能不太好，我通过浏览器访问时，页面要刷半天才能刷出来。我想着急性子的小伙伴们肯定忍受不了这样的慢网页呀，所以又接着尝试了<a href="https://emby.media/docker-server.html" target="_blank" rel="noopener">Emby</a>，简单测试了下，性能还不错，于是便选定了使用Emby来实现团队的媒体服务器。</p>
+<h3 id="0x02-快速搭建"><a href="#0x02-快速搭建" class="headerlink" title="0x02 快速搭建"></a>0x02 快速搭建</h3><p>有了docker之后，要使用一个开源工具简直不要太方便，总共就三步：</p>
+<ol>
+<li>在 docker hub 上找到这个工具的页面</li>
+<li>按照使用说明写好<code>docker-compose.yml</code>文件</li>
+<li><code>docker-compose up -d</code></li>
+</ol>
+<p>将我的<code>docker-compose.yml</code>共享在这里，参考docker hub 上的<a href="https://hub.docker.com/r/emby/embyserver" target="_blank" rel="noopener">embyserver</a></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">"3"</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  embyserver:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">emby/embyserver:latest</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">8096</span><span class="string">:8096</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">8920</span><span class="string">:8920</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/root/emby/config:/config</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/root/emby/share1:/mnt/share1</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/root/emby/share2:/mnt/share2</span></span><br></pre></td></tr></table></figure>
+<p>起来之后，通过浏览器访问<a href="">http://serverip:8096</a>，经过一些简单的配置就可以使用起来了。</p>
+<h3 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h3><p>其实，Emby可以用来作为家庭的媒体服务器，通过NAS搭建一个服务器，然后使用它提供的各类接入App，就能多终端接入了。</p>
+<p>看到这篇文章的小伙伴如果有类似的更好的开源工具或解决方案，欢迎分享给我。</p>
+
       
-      
-      <section class="panel panel-default b-no">
-        <div class="panel-heading" role="tab">
-          <h3 class="panel-title">
-            <a data-toggle="collapse" href="#collapse2018" aria-expanded="true">
-              <i class="icon icon-calendar-plus text-active"></i><i class="icon icon-calendar-minus text"></i>
-              2018
-            </a>
-            <!-- <a href="/blog/archives/2018" class="archive-year">2018</a> -->
-          </h3>
-        </div>
-        <div id="collapse2018" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2018">
-        <div class="panel-body">
-          <div class="collection">
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
     
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://tomoyadeng.github.io/blog/2019/03/12/building-a-media-server-based-on-emby/" title="基于Emby搭建媒体服务器" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2019/03/12/building-a-media-server-based-on-emby/</a>
+    </li>
     
-<a href="/blog/2018/12/15/write-a-tiny-rpc-framework/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-12-15T13:31:32.000Z" itemprop="datePublished">2018-12-15</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> 仿写一个简单的RPC框架
-</a>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
 
 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/tomoyadeng" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/blog/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/tomoyadeng" target="_blank"><span class="text-dark">Tomoya Deng</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
   
     
-    
-    
-<a href="/blog/2018/12/08/build-docker-image-for-gitbook/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-12-08T15:46:32.000Z" itemprop="datePublished">2018-12-08</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> 构建 gitbook 的 docker 镜像
-</a>
-
-
-  
-    
-    
-    
-<a href="/blog/2018/10/31/k8s-mysql-cluster/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-10-31T11:34:59.000Z" itemprop="datePublished">2018-10-31</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> K8s上部署MySQL主从
-</a>
-
-
-  
-    
-    
-    
-<a href="/blog/2018/10/12/k8s-in-ubuntu18.04/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-10-12T12:13:48.000Z" itemprop="datePublished">2018-10-12</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群
-</a>
-
-
-  
-    
-    
-    
-<a href="/blog/2018/10/07/simplify-code-with-stream-api/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-10-07T13:11:07.000Z" itemprop="datePublished">2018-10-07</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> 使用 Stream API 简化代码
-</a>
-
-
-  
-    
-    
-    
-<a href="/blog/2018/09/24/logging-with-aop-and-annotation/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-09-24T04:04:16.000Z" itemprop="datePublished">2018-09-24</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> 使用Spring AOP &amp; 自定义注解 记录日志
-</a>
-
-
-  
-    
-    
-    
-<a href="/blog/2018/09/23/springboot-k8s-3/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-09-23T03:10:13.000Z" itemprop="datePublished">2018-09-23</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> K8s折腾日记(三)--为MySQL提供REST API
-</a>
-
-
-  
-    
-    
-    
-<a href="/blog/2018/09/16/springboot-k8s-2/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-09-16T03:52:22.000Z" itemprop="datePublished">2018-09-16</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用
-</a>
-
-
-  
-    
-    
-    
-<a href="/blog/2018/09/13/springboot-k8s-1/" class="collection-item" target="_blank" itemprop="url">
-  <time datetime="2018-09-13T15:22:43.000Z" itemprop="datePublished">2018-09-13</time>
-  <span>&nbsp;&nbsp;&nbsp;</span> K8s折腾日记(一)--在Kubernetes中部署spring boot应用
-</a>
-
-
-  
-  
-    </div></div></div></section>
-  
-
-	    </div>
-  	</article>
+  <section id="comments">
   	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
     
-    <nav class="bar bar-footer clearfix" data-stick-bottom>
-        <div class="bar-inner">
-        <ul class="pager pull-left">
-            
-            <li class="prev disabled">
-                <a href="javascript:;">
-                    <i class="icon icon-angle-left"></i>
-                    Prev
-                </a>
-            </li>
-            
-            
-            <li class="next">
-                <a href="/blog/archives/page/2/">
-                    Next
-                    <i class="icon icon-angle-right"></i>
-                </a>
-            </li>
-            
-        </ul>
-        <div class="total-article bar-right">Page 1 of 2</div>
-        </div>
-    </nav>
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
     
- 	
+    
+    <li class="next">
+      <a href="/blog/2018/12/15/write-a-tiny-rpc-framework/" title="仿写一个简单的RPC框架"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -512,6 +477,29 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+
+   
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://tomoyadeng.github.io/blog/2019/03/12/building-a-media-server-based-on-emby/';
+        
+        this.page.identifier = 'building-a-media-server-based-on-emby';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'tomoya-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
 
 
 
