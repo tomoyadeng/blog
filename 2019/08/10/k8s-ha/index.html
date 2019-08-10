@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>K8s折腾日记 -- 搭建HA集群(1.15.1) | Tomoya&#39;s Blog</title>
+  <meta name="description" content="貌似从 1.9 版本开始，Kubernetes 就支持通过kubeadm直接起一个Master高可用的集群了，可谓是越来越方便了。正好最近在家里配置了个高性能的台式机，可以起好几台虚拟机了，索性大方点，整个三主三从的HA集群。 官方文档给出了两种HA的拓扑结构，其实就是Etcd在集群内和Etcd在集群外的区别，为了方便，我就直接采用内置Etcd的方式。  内置Etcd    外置Etcd   从拓">
+<meta name="keywords" content="kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8s折腾日记 -- 搭建HA集群(1.15.1)">
+<meta property="og:url" content="https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/index.html">
+<meta property="og:site_name" content="Tomoya&#39;s Blog">
+<meta property="og:description" content="貌似从 1.9 版本开始，Kubernetes 就支持通过kubeadm直接起一个Master高可用的集群了，可谓是越来越方便了。正好最近在家里配置了个高性能的台式机，可以起好几台虚拟机了，索性大方点，整个三主三从的HA集群。 官方文档给出了两种HA的拓扑结构，其实就是Etcd在集群内和Etcd在集群外的区别，为了方便，我就直接采用内置Etcd的方式。  内置Etcd    外置Etcd   从拓">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/kubeadm-ha-topology-stacked-etcd.svg">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/kubeadm-ha-topology-external-etcd.svg">
+<meta property="og:updated_time" content="2019-08-10T09:58:50.147Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="K8s折腾日记 -- 搭建HA集群(1.15.1)">
+<meta name="twitter:description" content="貌似从 1.9 版本开始，Kubernetes 就支持通过kubeadm直接起一个Master高可用的集群了，可谓是越来越方便了。正好最近在家里配置了个高性能的台式机，可以起好几台虚拟机了，索性大方点，整个三主三从的HA集群。 官方文档给出了两种HA的拓扑结构，其实就是Etcd在集群内和Etcd在集群外的区别，为了方便，我就直接采用内置Etcd的方式。  内置Etcd    外置Etcd   从拓">
+<meta name="twitter:image" content="https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/kubeadm-ha-topology-stacked-etcd.svg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Tomoya&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/blog/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/blog/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/tomoyadeng" target="_blank">
+          <img class="img-circle img-rotate" src="/blog/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Tomoya Deng</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/blog/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Framework/">Framework</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Java/">Java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Middleware/">Middleware</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Tools/">Tools</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kafka/">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/kubernetes/">kubernetes</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/mysql/">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/rpc/">rpc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/spring-boot/">spring boot</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/blog/tags/Java/" style="font-size: 13.5px;">Java</a> <a href="/blog/tags/docker/" style="font-size: 13.75px;">docker</a> <a href="/blog/tags/kafka/" style="font-size: 13px;">kafka</a> <a href="/blog/tags/kubernetes/" style="font-size: 14px;">kubernetes</a> <a href="/blog/tags/mysql/" style="font-size: 13.5px;">mysql</a> <a href="/blog/tags/rpc/" style="font-size: 13px;">rpc</a> <a href="/blog/tags/spring/" style="font-size: 13px;">spring</a> <a href="/blog/tags/spring-boot/" style="font-size: 13.25px;">spring boot</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/03/">March 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/09/">September 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2019/08/10/k8s-ha/" class="title">K8s折腾日记 -- 搭建HA集群(1.15.1)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-10T09:58:50.000Z" itemprop="datePublished">2019-08-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2019/03/12/building-a-media-server-based-on-emby/" class="title">基于Emby搭建媒体服务器</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-12T14:50:23.000Z" itemprop="datePublished">2019-03-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Middleware/">Middleware</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/12/15/write-a-tiny-rpc-framework/" class="title">仿写一个简单的RPC框架</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-15T13:31:32.000Z" itemprop="datePublished">2018-12-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/12/08/build-docker-image-for-gitbook/" class="title">构建 gitbook 的 docker 镜像</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-08T15:46:32.000Z" itemprop="datePublished">2018-12-08</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+              </p>
+              <p class="item-title">
+                <a href="/blog/2018/10/31/k8s-mysql-cluster/" class="title">K8s上部署MySQL主从</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-31T11:34:59.000Z" itemprop="datePublished">2018-10-31</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-k8s-ha" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      K8s折腾日记 -- 搭建HA集群(1.15.1)
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2019/08/10/k8s-ha/" class="article-date">
+	  <time datetime="2019-08-10T09:58:50.000Z" itemprop="datePublished">2019-08-10</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Cloud-Computing/">Cloud Computing</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/kubernetes/">kubernetes</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2019/08/10/k8s-ha/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.4k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 6(minutes)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>貌似从 1.9 版本开始，Kubernetes 就支持通过kubeadm直接起一个Master高可用的集群了，可谓是越来越方便了。正好最近在家里配置了个高性能的台式机，可以起好几台虚拟机了，索性大方点，整个三主三从的HA集群。</p>
+<p>官方文档给出了两种HA的拓扑结构，其实就是Etcd在集群内和Etcd在集群外的区别，为了方便，我就直接采用内置Etcd的方式。</p>
+<ul>
+<li>内置Etcd</li>
+</ul>
+<img src="/blog/2019/08/10/k8s-ha/kubeadm-ha-topology-stacked-etcd.svg">
+<ul>
+<li>外置Etcd</li>
+</ul>
+<img src="/blog/2019/08/10/k8s-ha/kubeadm-ha-topology-external-etcd.svg">
+<p>从拓扑图中可以看出，我们需要一个的 Load Balancer 来实现ApiServer的高可用和负载均衡，所有访问ApiServer的请求都通过 Load Balancer 的 VIP。如果机器在云端，直接购买云服务商提供的负载均衡服务就行了。比如华为云的ELB，以及阿里云的SLB。</p>
+<p>由于我是本地起的虚拟机，就不得不自己想办法搭一个 Load Balancer 出来，在网上搜了一下，决定用 Keepalived + haproxy 来搞。</p>
+<h3 id="0x00-规划"><a href="#0x00-规划" class="headerlink" title="0x00 规划"></a>0x00 规划</h3><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>ip</th>
+<th>角色</th>
+<th>配置</th>
+<th>OS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>192.168.137.100</td>
+<td>VIP</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>node-1</td>
+<td>192.168.137.101</td>
+<td>master</td>
+<td>2C4G</td>
+<td>Ubuntu 18.04</td>
+</tr>
+<tr>
+<td>node-2</td>
+<td>192.168.137.102</td>
+<td>master</td>
+<td>2C4G</td>
+<td>Ubuntu 18.04</td>
+</tr>
+<tr>
+<td>node-3</td>
+<td>192.168.137.103</td>
+<td>master</td>
+<td>2C4G</td>
+<td>Ubuntu 18.04</td>
+</tr>
+<tr>
+<td>node-4</td>
+<td>192.168.137.104</td>
+<td>node</td>
+<td>2C4G</td>
+<td>Ubuntu 18.04</td>
+</tr>
+<tr>
+<td>node-5</td>
+<td>192.168.137.105</td>
+<td>node</td>
+<td>2C4G</td>
+<td>Ubuntu 18.04</td>
+</tr>
+<tr>
+<td>node-6</td>
+<td>192.168.137.106</td>
+<td>node</td>
+<td>2C4G</td>
+<td>Ubuntu 18.04</td>
+</tr>
+</tbody>
+</table>
+<p>省略 Docker 和 kubernetes 安装的过程，直接按照官网的步骤搞就好了。</p>
+<p>这么多台机器都要执行同样的安装操作，想想都有点累，这里给出两个解决办法：</p>
+<ul>
+<li>如果是用的虚拟机，应该是有复制虚拟机的功能的，比如我使用的Hyper-V的导出导入功能。先在一台机器上安装好这些基础设施后，再复制成多台，改下IP和Hostname就行了</li>
+<li>直接祭出大杀器Ansible，在网上找一个安装Kubernetes的palybook自己改一改，或者自己从头撸一个也是可以的</li>
+</ul>
+<h3 id="0x01-安装-keepalived"><a href="#0x01-安装-keepalived" class="headerlink" title="0x01 安装 keepalived"></a>0x01 安装 keepalived</h3><p>在所有 master 节点安装和配置 keepalived， 注意 state 配置差别</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt; EOF</span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">apt install -y keepalived</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面的 state 第一台配置为 MASTER 剩下两台配置为 BACKUP</span></span><br><span class="line">cat &gt; /etc/keepalived/keepalived.conf &lt;&lt; EOF</span><br><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs &#123;</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_script check_haproxy &#123;</span><br><span class="line">    script "killall -0 haproxy"</span><br><span class="line">    interval 3</span><br><span class="line">    weight -2</span><br><span class="line">    fall 10</span><br><span class="line">    rise 2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state MASTER</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 250</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication &#123;</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 35f18af7190d51c9f7f78f37300a0cbd</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.137.100</span><br><span class="line">    &#125;</span><br><span class="line">    track_script &#123;</span><br><span class="line">        check_haproxy</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">service keepalived start</span><br><span class="line">service keepalived status</span><br></pre></td></tr></table></figure>
+<h3 id="0x02-安装-HAProxy"><a href="#0x02-安装-HAProxy" class="headerlink" title="0x02 安装 HAProxy"></a>0x02 安装 HAProxy</h3><p>在所有 master 节点安装和配置 HAProxy，所有节点配置都是一样的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt; EOF</span><br><span class="line">net.ipv4.ip_nonlocal_bind = 1</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">apt install -y haproxy</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里配置监听 VIP 192.168.137.100 的 16443 端口，并将请求转发到后端三台master的6443端口</span></span><br><span class="line">cat &gt; /etc/haproxy/haproxy.cfg &lt;&lt; EOF</span><br><span class="line">global</span><br><span class="line">    # to have these messages end up in /var/log/haproxy.log you will</span><br><span class="line">    # need to:</span><br><span class="line">    #</span><br><span class="line">    # 1) configure syslog to accept network log events.  This is done</span><br><span class="line">    #    by adding the '-r' option to the SYSLOGD_OPTIONS in</span><br><span class="line">    #    /etc/sysconfig/syslog</span><br><span class="line">    #</span><br><span class="line">    # 2) configure local2 events to go to the /var/log/haproxy.log</span><br><span class="line">    #   file. A line like the following can be added to</span><br><span class="line">    #   /etc/sysconfig/syslog</span><br><span class="line">    #</span><br><span class="line">    #    local2.*                       /var/log/haproxy.log</span><br><span class="line">    #</span><br><span class="line">    log         127.0.0.1 local2</span><br><span class="line"></span><br><span class="line">    chroot      /var/lib/haproxy</span><br><span class="line">    pidfile     /var/run/haproxy.pid</span><br><span class="line">    maxconn     4000</span><br><span class="line">    user        haproxy</span><br><span class="line">    group       haproxy</span><br><span class="line">    daemon</span><br><span class="line"></span><br><span class="line">    # turn on stats unix socket</span><br><span class="line">    stats socket /var/lib/haproxy/stats</span><br><span class="line"></span><br><span class="line">defaults</span><br><span class="line">    mode                    tcp</span><br><span class="line">    log                     global</span><br><span class="line">    option                  redispatch</span><br><span class="line">    retries                 3</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">listen https-apiserver</span><br><span class="line">    bind 192.168.137.100:16443</span><br><span class="line">    mode        tcp</span><br><span class="line">    balance     roundrobin</span><br><span class="line">    timeout server 15s</span><br><span class="line">    timeout connect 15s</span><br><span class="line">    server  node-1 192.168.137.101:6443 check port 6443 inter 5000 fall 5</span><br><span class="line">    server  node-2 192.168.137.102:6443 check port 6443 inter 5000 fall 5</span><br><span class="line">    server  node-3 192.168.137.103:6443 check port 6443 inter 5000 fall 5</span><br><span class="line"></span><br><span class="line">listen http-apiserver</span><br><span class="line">    bind 192.168.137.100:1080</span><br><span class="line">    mode tcp</span><br><span class="line">    balance roundrobin</span><br><span class="line">    timeout server 15s</span><br><span class="line">    timeout connect 15s</span><br><span class="line"></span><br><span class="line">    server  node-1 192.168.137.101:8080 check port 6443 inter 5000 fall 5</span><br><span class="line">    server  node-2 192.168.137.102:8080 check port 6443 inter 5000 fall 5</span><br><span class="line">    server  node-3 192.168.137.103:8080 check port 6443 inter 5000 fall 5</span><br><span class="line"></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">service haproxy start</span><br><span class="line"></span><br><span class="line">service haproxy status</span><br></pre></td></tr></table></figure>
+<h3 id="0x03-kubeadm-创建HA集群"><a href="#0x03-kubeadm-创建HA集群" class="headerlink" title="0x03 kubeadm 创建HA集群"></a>0x03 kubeadm 创建HA集群</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 确保关闭了swap</span></span><br><span class="line">swapoff -a</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 假装我有一个域名 cluster.kube.local</span></span><br><span class="line">cat &gt;&gt; /etc/hosts &lt;&lt; EOF</span><br><span class="line">192.168.137.100 cluster.kube.local</span><br><span class="line"></span><br><span class="line">192.168.137.101 node-1</span><br><span class="line">192.168.137.102 node-2</span><br><span class="line">192.168.137.103 node-3</span><br><span class="line">192.168.137.104 node-4</span><br><span class="line">192.168.137.105 node-5</span><br><span class="line">192.168.137.106 node-6</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 HA 集群的 config 文件</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 我准备使用 flannel 网络插件，所以 podSubnet 配置 <span class="string">"10.244.0.0/16"</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果是其他网络插件，则这里的 podSubnet 要按要求具体配置</span></span><br><span class="line">cat &gt; kubeadm-config.yaml &lt;&lt; EOF</span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta1</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: v1.15.1</span><br><span class="line">apiServer:</span><br><span class="line">  certSANs:</span><br><span class="line">    - "cluster.kube.local"</span><br><span class="line">controlPlaneEndpoint: "cluster.kube.local:16443"</span><br><span class="line">networking:</span><br><span class="line">  podSubnet: "10.244.0.0/16"</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用kubeadm init启动HA集群</span></span><br><span class="line">sudo kubeadm init --config=kubeadm-config.yaml --upload-certs</span><br></pre></td></tr></table></figure>
+<p>顺利的话，会给出两条<code>kubeadm join</code>命令，上面的是添加master的命令，下面的添加node的命令。</p>
+<pre><code>Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
+https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of the control-plane node running the following command on each as root:
+
+kubeadm join cluster.kube.local:16443 --token 1qjsgg.6s83tvxoo3wma1ps \
+    --discovery-token-ca-cert-hash sha256:b454bece5e0292c52794a35aa41b60184d1aad64a3519786e80966fee498d0f5 \
+    --control-plane --certificate-key 73b5c18b703b93fde588fece41f1eef7f6ddd693a6ca01067f762f35992afd13
+
+Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
+As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
+&quot;kubeadm init phase upload-certs --upload-certs&quot; to reload certs afterward.
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join cluster.kube.local:16443 --token 1qjsgg.6s83tvxoo3wma1ps \
+    --discovery-token-ca-cert-hash sha256:b454bece5e0292c52794a35aa41b60184d1aad64a3519786e80966fee498d0f5
+</code></pre><p>安装完选择的网络插件(比如 flannel )之后，就可以在其他节点执行对应的命令，添加其他的两个master和三个node了。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/" title="K8s折腾日记 -- 搭建HA集群(1.15.1)" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/tomoyadeng" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/blog/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/tomoyadeng" target="_blank"><span class="text-dark">Tomoya Deng</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/blog/2019/03/12/building-a-media-server-based-on-emby/" title="基于Emby搭建媒体服务器"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/tomoyadeng" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/tomoyadeng" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/blog/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2017 - 2019 Tomoya Deng
+        
+        <!-- <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div> -->
+    </div>
+</footer>
+
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/blog/js/plugin.min.js"></script>
+<script src="/blog/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://tomoyadeng.github.io/blog/2019/08/10/k8s-ha/';
+        
+        this.page.identifier = 'k8s-ha';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'tomoya-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+
+
+
+</body>
+</html>
