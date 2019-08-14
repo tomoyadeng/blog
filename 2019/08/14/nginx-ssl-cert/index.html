@@ -17,16 +17,23 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Tag: kubernetes | Tomoya&#39;s Blog</title>
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Tomoya&#39;s Blog">
-<meta property="og:url" content="https://tomoyadeng.github.io/blog/tags/kubernetes/index.html">
+  <title>nginx配置ssl实现https/http2访问 | Tomoya&#39;s Blog</title>
+  <meta name="description" content="最近我在vultr上的买的VPS的IP被墙掉了，导致之前在VPS上部署的一个gitbook网页访问不了。因此，不得不将这个网页迁移到我的阿里云机器上部署，这里记录下 nginx 的 SSL 配置。 0x01 域名 &amp;amp; 证书如果在阿里云上购买了域名，应该是能够直接申请一个免费的证书的，证书申请完成后，直接下载下来拷贝到服务器上。可以选择Nginx的模板，下载下来的是一个.pem扩展名的证书文">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx配置ssl实现https&#x2F;http2访问">
+<meta property="og:url" content="https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/index.html">
 <meta property="og:site_name" content="Tomoya&#39;s Blog">
+<meta property="og:description" content="最近我在vultr上的买的VPS的IP被墙掉了，导致之前在VPS上部署的一个gitbook网页访问不了。因此，不得不将这个网页迁移到我的阿里云机器上部署，这里记录下 nginx 的 SSL 配置。 0x01 域名 &amp;amp; 证书如果在阿里云上购买了域名，应该是能够直接申请一个免费的证书的，证书申请完成后，直接下载下来拷贝到服务器上。可以选择Nginx的模板，下载下来的是一个.pem扩展名的证书文">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/chrome_h2.png">
+<meta property="og:updated_time" content="2019-08-14T15:27:26.680Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tomoya&#39;s Blog">
+<meta name="twitter:title" content="nginx配置ssl实现https&#x2F;http2访问">
+<meta name="twitter:description" content="最近我在vultr上的买的VPS的IP被墙掉了，导致之前在VPS上部署的一个gitbook网页访问不了。因此，不得不将这个网页迁移到我的阿里云机器上部署，这里记录下 nginx 的 SSL 配置。 0x01 域名 &amp;amp; 证书如果在阿里云上购买了域名，应该是能够直接申请一个免费的证书的，证书申请完成后，直接下载下来拷贝到服务器上。可以选择Nginx的模板，下载下来的是一个.pem扩展名的证书文">
+<meta name="twitter:image" content="https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/chrome_h2.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://tomoyadeng.github.io/blog/tags/kubernetes/index.html">
+  <link rel="canonical" href="https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Tomoya&#39;s Blog" type="application/atom+xml">
   
@@ -282,220 +289,145 @@
 </aside>
 
   
-  <main class="main" role="main">
-  <article class="content article article-tags post-type-list" itemscope="">
-    <header class="article-header">
-      <h1 itemprop="name" class="hidden-xs">Tag: kubernetes</h1>
-      <p class="text-muted hidden-xs">Total 7 articles</p>
-      <nav role="navigation" id="nav-main" class="okayNav">
-        <ul>
-          <li><a href="/tags">All</a></li>
-          
-          <li><a href="/tags/Java/">Java</a></li>
-          
-          <li><a href="/tags/docker/">docker</a></li>
-          
-          <li><a href="/tags/kubernetes/">kubernetes</a></li>
-          
-          <li><a href="/tags/nginx/">nginx</a></li>
-          
-          <li><a href="/tags/kafka/">kafka</a></li>
-          
-          <li><a href="/tags/spring-boot/">spring boot</a></li>
-          
-          <li><a href="/tags/mysql/">mysql</a></li>
-          
-          <li><a href="/tags/spring/">spring</a></li>
-          
-          <li><a href="/tags/rpc/">rpc</a></li>
-          
-        </ul>
-      </nav>
-    </header>
-    <!-- /header -->
-    <div class="article-body">
-      <div class="row">
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-nginx-ssl-cert" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
         
-<div class="col-md-6">
-    
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2019-08-11T01:54:33.000Z" itemprop="datePublished">2019-08-11</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/blog/2019/08/11/k8s-dashboard-openssl/">K8s折腾日记 -- 部署 Dashboard 和 metrics-server</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/blog/tags/kubernetes/" class="label label-default mb">kubernetes</a>
-     
-     
-   </div>
-   
-</article>
+  
+    <h1 class="article-title" itemprop="name">
+      nginx配置ssl实现https/http2访问
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/blog/2019/08/14/nginx-ssl-cert/" class="article-date">
+	  <time datetime="2019-08-14T15:26:32.000Z" itemprop="datePublished">2019-08-14</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/blog/categories/Tools/">Tools</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/blog/tags/nginx/">nginx</a>
+  </span>
 
 
-</div>
+        
 
-<div class="col-md-6">
-    
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2019-08-10T09:58:50.000Z" itemprop="datePublished">2019-08-10</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/blog/2019/08/10/k8s-ha/">K8s折腾日记 -- 搭建HA集群(1.15.1)</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/blog/tags/kubernetes/" class="label label-default mb">kubernetes</a>
-     
-     
-   </div>
-   
-</article>
-
-
-</div>
-
-<div class="col-md-6">
-    
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2018-10-31T11:34:59.000Z" itemprop="datePublished">2018-10-31</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/blog/2018/10/31/k8s-mysql-cluster/">K8s上部署MySQL主从</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/blog/tags/kubernetes/" class="label label-default mb">kubernetes</a>
-     
-      <a href="/blog/tags/mysql/" class="label label-default mb">mysql</a>
-     
-     
-   </div>
-   
-</article>
-
-
-</div>
-
-<div class="col-md-6">
-    
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2018-10-12T12:13:48.000Z" itemprop="datePublished">2018-10-12</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/blog/2018/10/12/k8s-in-ubuntu18.04/">K8s折腾日记(零) -- 基于 Ubuntu 18.04 安装部署K8s集群</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/blog/tags/kubernetes/" class="label label-default mb">kubernetes</a>
-     
-     
-   </div>
-   
-</article>
-
-
-</div>
-
-<div class="col-md-6">
-    
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2018-09-23T03:10:13.000Z" itemprop="datePublished">2018-09-23</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/blog/2018/09/23/springboot-k8s-3/">K8s折腾日记(三)--为MySQL提供REST API</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/blog/tags/kubernetes/" class="label label-default mb">kubernetes</a>
-     
-      <a href="/blog/tags/mysql/" class="label label-default mb">mysql</a>
-     
-     
-   </div>
-   
-</article>
-
-
-</div>
-
-<div class="col-md-6">
-    
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2018-09-16T03:52:22.000Z" itemprop="datePublished">2018-09-16</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/blog/2018/09/16/springboot-k8s-2/">K8s折腾日记(二)--在Kubernetes中部署一个单实例有状态的应用</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/blog/tags/kubernetes/" class="label label-default mb">kubernetes</a>
-     
-      <a href="/blog/tags/mysql/" class="label label-default mb">mysql</a>
-     
-     
-   </div>
-   
-</article>
-
-
-</div>
-
-<div class="col-md-6">
-    
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2018-09-13T15:22:43.000Z" itemprop="datePublished">2018-09-13</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/blog/2018/09/13/springboot-k8s-1/">K8s折腾日记(一)--在Kubernetes中部署spring boot应用</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/blog/tags/kubernetes/" class="label label-default mb">kubernetes</a>
-     
-      <a href="/blog/tags/spring-boot/" class="label label-default mb">spring boot</a>
-     
-     
-   </div>
-   
-</article>
-
-
-</div>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/blog/2019/08/14/nginx-ssl-cert/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 467(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
+	
 
       </div>
     </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>最近我在vultr上的买的VPS的IP被墙掉了，导致之前在VPS上部署的一个gitbook网页访问不了。因此，不得不将这个网页迁移到我的阿里云机器上部署，这里记录下 nginx 的 SSL 配置。</p>
+<h3 id="0x01-域名-amp-证书"><a href="#0x01-域名-amp-证书" class="headerlink" title="0x01 域名 &amp; 证书"></a>0x01 域名 &amp; 证书</h3><p>如果在阿里云上购买了域名，应该是能够直接申请一个免费的证书的，证书申请完成后，直接下载下来拷贝到服务器上。可以选择Nginx的模板，下载下来的是一个<code>.pem</code>扩展名的证书文件和一个<code>.key</code>扩展名的私钥文件。</p>
+<h3 id="0x02-nginx-配置"><a href="#0x02-nginx-配置" class="headerlink" title="0x02 nginx 配置"></a>0x02 nginx 配置</h3><p>这里将证书和私钥文件放在自己创建的 <code>/cert/</code> 目录下，并重命名了。</p>
+<p>接下来就是修改 nginx 的配置文件了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl default_server;</span><br><span class="line">    listen [::]:443 ssl default_server;</span><br><span class="line"></span><br><span class="line">    ssl on;</span><br><span class="line">    ssl_certificate   /root/cert/a.pem;</span><br><span class="line">    ssl_certificate_key  /root/cert/a.key;</span><br><span class="line">    ssl_session_timeout 5m;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root html;</span><br><span class="line">        index index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重启 nginx</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure>
+<h3 id="0x03-后续配置"><a href="#0x03-后续配置" class="headerlink" title="0x03 后续配置"></a>0x03 后续配置</h3><p>nginx 起好了之后，还需要在阿里云的控制台修改域名解析规则，将域名解析到新的服务器IP上。此外，阿里云的机器还需要修改安全组配置，添加 443 端口的ACL规则，这样这个机器才是可达的。</p>
+<h3 id="0x04-HTTP-2"><a href="#0x04-HTTP-2" class="headerlink" title="0x04 HTTP 2"></a>0x04 HTTP 2</h3><p>等弄好了，过了几分钟我才记起来 nginx 现在使能了 SSL 的前提下可以直接使能 HTTP 2 了，索性试试吧。</p>
+<p>再次修改 nginx 的配置，直接在原来的 listen 配置加上 http2 即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listen 443 ssl http2 default_server;</span><br><span class="line">listen [::]:443 ssl http2 default_server;</span><br></pre></td></tr></table></figure>
+<p>重启 nginx</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure>
+<p>打开浏览器的控制台，重新访问网页，可以看到 HTTP 2 是否使能成功了(需要在Chrome developer tool里边的network加上Protocol一栏)。</p>
+<img src="/blog/2019/08/14/nginx-ssl-cert/chrome_h2.png">
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/" title="nginx配置ssl实现https/http2访问" target="_blank" rel="external">https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/tomoyadeng" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/blog/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/tomoyadeng" target="_blank"><span class="text-dark">Tomoya Deng</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
   </article>
-   
+  
+    
+  <section id="comments">
+  	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/blog/2019/08/11/k8s-dashboard-openssl/" title="K8s折腾日记 -- 部署 Dashboard 和 metrics-server"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -544,10 +476,33 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
     window.INSIGHT_CONFIG = INSIGHT_CONFIG;
 })(window);
 </script>
-<script src="/blog/js/insight.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script src="/blog/js/insight.js"></script>
 
 
 
+
+
+   
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/';
+        
+        this.page.identifier = 'nginx-ssl-cert';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'tomoya-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 

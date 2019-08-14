@@ -6,7 +6,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="https://tomoyadeng.github.io/blog/"/>
-  <updated>2019-08-11T01:54:33.206Z</updated>
+  <updated>2019-08-14T15:27:26.680Z</updated>
   <id>https://tomoyadeng.github.io/blog/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>nginx配置ssl实现https/http2访问</title>
+    <link href="https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/"/>
+    <id>https://tomoyadeng.github.io/blog/2019/08/14/nginx-ssl-cert/</id>
+    <published>2019-08-14T15:26:32.000Z</published>
+    <updated>2019-08-14T15:27:26.680Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><p>最近我在vultr上的买的VPS的IP被墙掉了，导致之前在VPS上部署的一个gitbook网页访问不了。因此，不得不将这个网页迁移到我的阿里云机器上部署，这里记录下 nginx 的 SSL 配置。</p><h3 id="0x01-域名-amp-证书"><a href="#0x01-域名-amp-证书" class="headerlink" title="0x01 域名 &amp; 证书"></a>0x01 域名 &amp; 证书</h3><p>如果在阿里云上购买了域名，应该是能够直接申请一个免费的证书的，证书申请完成后，直接下载下来拷贝到服务器上。可以选择Nginx的模板，下载下来的是一个<code>.pem</code>扩展名的证书文件和一个<code>.key</code>扩展名的私钥文件。</p><h3 id="0x02-nginx-配置"><a href="#0x02-nginx-配置" class="headerlink" title="0x02 nginx 配置"></a>0x02 nginx 配置</h3><p>这里将证书和私钥文件放在自己创建的 <code>/cert/</code> 目录下，并重命名了。</p><p>接下来就是修改 nginx 的配置文件了</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl default_server;</span><br><span class="line">    listen [::]:443 ssl default_server;</span><br><span class="line"></span><br><span class="line">    ssl on;</span><br><span class="line">    ssl_certificate   /root/cert/a.pem;</span><br><span class="line">    ssl_certificate_key  /root/cert/a.key;</span><br><span class="line">    ssl_session_timeout 5m;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root html;</span><br><span class="line">        index index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>重启 nginx</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure><h3 id="0x03-后续配置"><a href="#0x03-后续配置" class="headerlink" title="0x03 后续配置"></a>0x03 后续配置</h3><p>nginx 起好了之后，还需要在阿里云的控制台修改域名解析规则，将域名解析到新的服务器IP上。此外，阿里云的机器还需要修改安全组配置，添加 443 端口的ACL规则，这样这个机器才是可达的。</p><h3 id="0x04-HTTP-2"><a href="#0x04-HTTP-2" class="headerlink" title="0x04 HTTP 2"></a>0x04 HTTP 2</h3><p>等弄好了，过了几分钟我才记起来 nginx 现在使能了 SSL 的前提下可以直接使能 HTTP 2 了，索性试试吧。</p><p>再次修改 nginx 的配置，直接在原来的 listen 配置加上 http2 即可</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listen 443 ssl http2 default_server;</span><br><span class="line">listen [::]:443 ssl http2 default_server;</span><br></pre></td></tr></table></figure><p>重启 nginx</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure><p>打开浏览器的控制台，重新访问网页，可以看到 HTTP 2 是否使能成功了(需要在Chrome developer tool里边的network加上Protocol一栏)。</p><img src="/blog/2019/08/14/nginx-ssl-cert/chrome_h2.png">]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css&quot;&gt;&lt;p&gt;最近我在vultr上的买的VPS的IP被墙掉了，导致之前在VPS上部署的一个
+      
+    
+    </summary>
+    
+      <category term="Tools" scheme="https://tomoyadeng.github.io/blog/categories/Tools/"/>
+    
+    
+      <category term="nginx" scheme="https://tomoyadeng.github.io/blog/tags/nginx/"/>
+    
+  </entry>
   
   <entry>
     <title>K8s折腾日记 -- 部署 Dashboard 和 metrics-server</title>
